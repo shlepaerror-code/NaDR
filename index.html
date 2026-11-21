@@ -3,331 +3,462 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚡ ДР Бро/Миша — INVITATION ⚡</title>
+<title>⚡ ДР Миши — ОТКРЫТЫЙ РАУНД · ВСЕ В ДЕЛЕ ⚡</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rubik:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --neon1:#00eaff;
-  --neon2:#ff2d95;
-  --neon3:#a6ff00;
-  --neon4:#ff9e00;
-  --bg:#050108;
-  --panel:rgba(10,6,25,.75);
+  --neon1:#00eaff;--neon2:#ff2d95;--neon3:#a6ff00;--neon4:#ff9e00;
+  --panel:rgba(8,5,20,.72);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{overflow-x:hidden}
-body{
-  background:radial-gradient(ellipse at 50% -10%, #14082e 0%, #06020f 45%, #020005 100%);
-  color:#fff;
-  font-family:'Rubik',sans-serif;
-  min-height:100vh;
-  cursor:crosshair;
-}
-body::before{
-  content:"";position:fixed;inset:0;pointer-events:none;z-index:50;
-  background:repeating-linear-gradient(0deg,rgba(255,255,255,.015) 0 1px,transparent 1px 3px);
-  mix-blend-mode:overlay;
-}
+body{background:#020005;color:#fff;font-family:'Rubik',sans-serif;min-height:100vh;cursor:crosshair;user-select:none}
 #stars{position:fixed;inset:0;z-index:0}
+#nebula{position:fixed;inset:-40px;z-index:0;opacity:.85;pointer-events:none;filter:saturate(1.15)}
+#bhCanvas{position:fixed;left:50%;bottom:-30px;transform:translateX(-50%);z-index:1;pointer-events:none}
 .vignette{position:fixed;inset:0;z-index:2;pointer-events:none;
-  background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.75) 100%)}
+  background:radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,.82) 100%)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:3;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 1px,transparent 1px 3px);mix-blend-mode:overlay}
 
-/* ============ НЕЙТРОННАЯ ЗВЕЗДА / ПУЛЬСАР ============ */
-.pulsar{position:fixed;top:12%;right:6%;width:120px;height:120px;z-index:1;pointer-events:none}
-.pulsar .core{
-  position:absolute;inset:35px;border-radius:50%;
-  background:radial-gradient(circle,#fff 0%,#9df2ff 35%,rgba(0,180,255,.0) 72%);
-  box-shadow:0 0 30px #9df2ff,0 0 80px rgba(0,200,255,.8),0 0 160px rgba(0,150,255,.5);
-  animation:pulseCore 1.4s infinite ease-in-out;
-}
-.pulsar .beam{
-  position:absolute;top:50%;left:50%;width:56vw;height:10px;
+/* ПУЛЬСАР */
+.pulsar{position:fixed;top:10%;right:5%;width:110px;height:110px;z-index:1;pointer-events:none}
+.pulsar .beam{position:absolute;top:50%;left:50%;width:52vw;height:8px;
   background:linear-gradient(90deg,transparent,rgba(0,234,255,.85),rgba(255,255,255,.95),rgba(0,234,255,.85),transparent);
-  transform-origin:left center;border-radius:50%;
-  filter:blur(1px);
-  animation:spinBeam 6s linear infinite;
-}
-.pulsar .beam.b2{animation-delay:-3s;opacity:.5}
-@keyframes spinBeam{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-@keyframes pulseCore{0%,100%{transform:scale(1)}50%{transform:scale(1.28)}}
+  transform-origin:left center;border-radius:50%;filter:blur(1px);animation:spinBeam 7s linear infinite}
+.pulsar .beam.b2{animation-delay:-3.5s;opacity:.45}
+.pulsar .core{position:absolute;inset:32px;border-radius:50%;
+  background:radial-gradient(circle,#fff 0%,#bdf4ff 35%,rgba(0,180,255,0) 72%);
+  box-shadow:0 0 30px #bdf4ff,0 0 90px rgba(0,200,255,.85);animation:pulseCore 1.5s infinite ease-in-out}
+@keyframes spinBeam{to{transform:rotate(360deg)}}
+@keyframes pulseCore{50%{transform:scale(1.25)}}
 
-/* ============ ЧЁРНАЯ ДЫРА ============ */
-.blackhole{position:fixed;bottom:4%;left:50%;transform:translateX(-50%);width:340px;height:340px;z-index:1;pointer-events:none}
-.bh-ring{
-  position:absolute;inset:0;border-radius:50%;
-  border:2px solid transparent;
-  border-top-color:var(--neon2);
-  border-right-color:var(--neon1);
-  filter:drop-shadow(0 0 14px var(--neon2));
-  animation:bhSpin 3s linear infinite;
-}
-.bh-ring.r2{inset:26px;animation-duration:4.5s;animation-direction:reverse;border-top-color:var(--neon4);border-right-color:var(--neon3)}
-.bh-ring.r3{inset:54px;animation-duration:6.5s;border-top-color:#b26bff;border-right-color:var(--neon1)}
-@keyframes bhSpin{to{transform:rotate(360deg)}}
-.bh-core{
-  position:absolute;inset:104px;border-radius:50%;
-  background:radial-gradient(circle,#000 55%,#12002e 78%,rgba(120,0,255,.55) 88%,transparent 96%);
-  box-shadow:0 0 60px rgba(178,60,255,.9), inset 0 0 50px #000;
-  animation:bhBreath 4s ease-in-out infinite;
-}
-@keyframes bhBreath{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
-.bh-flare{
-  position:absolute;inset:118px;border-radius:50%;
-  border:1px solid rgba(255,45,149,.0);
-  animation:bhFlare 2.2s ease-out infinite;
-}
-@keyframes bhFlare{
-  0%{box-shadow:0 0 0 0 rgba(255,45,149,.55);opacity:1}
-  100%{box-shadow:0 0 90px 40px rgba(255,45,149,0);opacity:0}
-}
+/* КВАЗАРЫ + МАГНЕТАРЫ */
+.quasar{position:fixed;width:6px;height:6px;border-radius:50%;z-index:1;pointer-events:none;
+  background:#fff;box-shadow:0 0 22px #fff,0 0 60px var(--qc,#00eaff);
+  animation:quasarPop var(--d,6s) ease-in-out var(--dl,0s) infinite}
+@keyframes quasarPop{0%,88%{opacity:0;transform:scale(0)}90%{opacity:1;transform:scale(1)}
+  93%{opacity:.2;transform:scale(.4)}96%{opacity:1;transform:scale(1.6)}100%{opacity:0;transform:scale(2.4)}}
+.magnetar{position:fixed;width:10px;height:10px;border-radius:50%;pointer-events:none;z-index:1;
+  background:#ffe86e;box-shadow:0 0 18px #ffe86e,0 0 50px #ff9e00;animation:magTw var(--d,3s) infinite var(--dl,0s)}
+@keyframes magTw{50%{opacity:.2;transform:scale(.5)}}
 
-/* ============ КВАЗАР-ВСПЫШКИ ============ */
-.quasar{
-  position:fixed;width:6px;height:6px;border-radius:50%;z-index:1;pointer-events:none;
-  background:#fff;box-shadow:0 0 20px #fff,0 0 50px var(--qc,#00eaff);
-  animation:quasarPop var(--d,6s) ease-in-out var(--dl,0s) infinite;
-}
-@keyframes quasarPop{
-  0%,88%{opacity:0;transform:scale(0)}
-  90%{opacity:1;transform:scale(1)}
-  93%{opacity:.2;transform:scale(.4)}
-  96%{opacity:1;transform:scale(1.6)}
-  100%{opacity:0;transform:scale(2.4)}
-}
+/* RIVALS: МОЛНИЯ */
+.lightning{position:fixed;z-index:5;pointer-events:none;filter:drop-shadow(0 0 10px #7df3ff) drop-shadow(0 0 26px rgba(0,234,255,.8))}
+.lightning path{fill:none;stroke:#eaffff;stroke-width:3;stroke-linecap:round}
 
-/* ============ КОНТЕНТ ============ */
-.wrap{position:relative;z-index:10;max-width:900px;margin:0 auto;padding:60px 20px 160px;text-align:center}
+/* RIVALS: ХИТМАРКЕР */
+.hitmarker{position:fixed;width:44px;height:44px;z-index:55;pointer-events:none;
+  transform:translate(-50%,-50%) rotate(45deg);animation:hitPop .45s ease-out forwards}
+.hitmarker i{position:absolute;background:#fff;box-shadow:0 0 10px #fff,0 0 22px var(--neon2)}
+.hitmarker i:nth-child(1){left:0;top:0;width:16px;height:4px}
+.hitmarker i:nth-child(2){right:0;top:0;width:4px;height:16px}
+.hitmarker i:nth-child(3){left:0;bottom:0;width:4px;height:16px}
+.hitmarker i:nth-child(4){right:0;bottom:0;width:16px;height:4px}
+.hitmarker.red i{background:#ff3355;box-shadow:0 0 10px #ff3355,0 0 26px #ff3355}
+@keyframes hitPop{0%{transform:translate(-50%,-50%) rotate(45deg) scale(.4);opacity:1}
+  60%{transform:translate(-50%,-50%) rotate(45deg) scale(1.15);opacity:1}
+  100%{transform:translate(-50%,-50%) rotate(45deg) scale(.8);opacity:0}}
 
-.tag{
-  display:inline-block;padding:8px 22px;border-radius:999px;
-  border:1px solid rgba(0,234,255,.5);
-  background:rgba(0,234,255,.06);
-  font-family:'Orbitron';font-size:13px;letter-spacing:4px;color:var(--neon1);
-  box-shadow:0 0 24px rgba(0,234,255,.25), inset 0 0 18px rgba(0,234,255,.12);
-  animation:tagFlicker 5s infinite;
-}
-@keyframes tagFlicker{0%,100%{opacity:1}92%{opacity:1}93%{opacity:.3}94%{opacity:1}96%{opacity:.5}97%{opacity:1}}
+/* RIVALS: УРОН */
+.dmg{position:fixed;z-index:55;pointer-events:none;font-family:'Orbitron';font-weight:900;font-size:28px;
+  color:#ffdd33;text-shadow:0 0 12px #ff9e00,0 0 30px #ff2d95;animation:dmgFloat 1s ease-out forwards;transform:translate(-50%,-50%)}
+.dmg.crit{color:#ff3355;font-size:40px;text-shadow:0 0 14px #ff3355,0 0 44px #ff2d95}
+@keyframes dmgFloat{0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}
+  15%{opacity:1;transform:translate(-50%,-60%) scale(1.25)}
+  100%{opacity:0;transform:translate(-50%,-190%) scale(1)}}
 
-h1{
-  font-family:'Orbitron';font-weight:900;
-  font-size:clamp(38px,8vw,84px);
-  margin:26px 0 8px;letter-spacing:2px;line-height:1.05;
-  background:linear-gradient(90deg,#00eaff,#fff,#ff2d95,#a6ff00,#00eaff);
-  background-size:300% 100%;
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  animation:gradShift 6s linear infinite;
-  filter:drop-shadow(0 0 22px rgba(0,234,255,.55));
-}
+/* RIVALS: HUD */
+.hud{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;justify-content:space-between;align-items:center;
+  padding:14px 22px;font-family:'Orbitron';pointer-events:none}
+.hud .hp{width:min(320px,36vw)}
+.hud .hp .name{font-size:12px;letter-spacing:3px;color:var(--neon1);text-shadow:0 0 10px var(--neon1);margin-bottom:5px}
+.hud .bar{height:16px;border:1px solid rgba(0,234,255,.6);border-radius:8px;background:rgba(0,0,0,.55);overflow:hidden}
+.hud .bar .fill{height:100%;width:100%;border-radius:6px;background:linear-gradient(90deg,#00eaff,#a6ff00);
+  box-shadow:0 0 16px rgba(0,234,255,.8);transition:width .5s cubic-bezier(.2,.9,.2,1.2)}
+.hud .timer{font-size:clamp(18px,3vw,28px);font-weight:900;letter-spacing:4px;color:#fff;
+  text-shadow:0 0 16px var(--neon2),0 0 40px var(--neon2)}
+.hud .round{font-size:11px;letter-spacing:3px;color:#b7aee6;text-align:right}
+.hud .round b{color:var(--neon3);text-shadow:0 0 10px var(--neon3)}
+
+/* RIVALS: TOAST */
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-30px) scale(.7);
+  z-index:56;font-family:'Orbitron';font-weight:900;letter-spacing:2px;text-align:center;
+  padding:14px 34px;border-radius:12px;opacity:0;pointer-events:none;
+  background:linear-gradient(120deg,rgba(255,45,149,.22),rgba(123,43,255,.22));
+  border:1px solid var(--neon2);box-shadow:0 0 30px rgba(255,45,149,.6), inset 0 0 24px rgba(255,45,149,.15);
+  text-shadow:0 0 14px var(--neon2);animation:toastIn 2.6s cubic-bezier(.2,1.4,.3,1) forwards}
+.toast .big{font-size:clamp(18px,3.4vw,30px);color:#fff}
+.toast .sub{font-size:12px;color:var(--neon1);letter-spacing:4px;margin-top:4px}
+@keyframes toastIn{0%{opacity:0;transform:translateX(-50%) translateY(-30px) scale(.7)}
+  12%{opacity:1;transform:translateX(-50%) translateY(0) scale(1.05)}
+  18%{transform:translateX(-50%) translateY(0) scale(1)}
+  80%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-20px) scale(.95)}}
+
+/* КОНТЕНТ */
+.wrap{position:relative;z-index:10;max-width:900px;margin:0 auto;padding:120px 20px 240px;text-align:center}
+.tag{display:inline-block;padding:8px 22px;border-radius:999px;border:1px solid rgba(0,234,255,.5);
+  background:rgba(0,234,255,.06);font-family:'Orbitron';font-size:13px;letter-spacing:4px;color:var(--neon1);
+  box-shadow:0 0 24px rgba(0,234,255,.25), inset 0 0 18px rgba(0,234,255,.12);animation:tagFlick 5s infinite}
+@keyframes tagFlick{92%{opacity:1}93%{opacity:.3}94%{opacity:1}96%{opacity:.5}97%{opacity:1}}
+h1{font-family:'Orbitron';font-weight:900;font-size:clamp(40px,8.5vw,88px);margin:26px 0 8px;letter-spacing:2px;line-height:1.05;
+  background:linear-gradient(90deg,#00eaff,#fff,#ff2d95,#a6ff00,#00eaff);background-size:300% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:gradShift 6s linear infinite;
+  filter:drop-shadow(0 0 22px rgba(0,234,255,.55))}
 @keyframes gradShift{to{background-position:300% 0}}
-
 .glitch{position:relative;display:inline-block}
-.glitch::before,.glitch::after{
-  content:attr(data-text);position:absolute;left:0;top:0;width:100%;
-  -webkit-background-clip:text;background-clip:text;
-}
+.glitch::before,.glitch::after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;-webkit-background-clip:text;background-clip:text}
 .glitch::before{color:#0ff;transform:translate(-3px,-2px);clip-path:inset(0 0 55% 0);animation:gl1 2.4s infinite steps(2);opacity:.8}
 .glitch::after{color:#f0f;transform:translate(3px,2px);clip-path:inset(55% 0 0 0);animation:gl2 2.1s infinite steps(2);opacity:.8}
 @keyframes gl1{0%,88%,100%{clip-path:inset(0 0 100% 0)}90%{clip-path:inset(0 0 55% 0)}94%{clip-path:inset(30% 0 30% 0)}}
 @keyframes gl2{0%,88%,100%{clip-path:inset(100% 0 0 0)}91%{clip-path:inset(55% 0 0 0)}95%{clip-path:inset(10% 0 60% 0)}}
-
-.subtitle{font-family:'Orbitron';font-size:clamp(13px,2.4vw,18px);letter-spacing:6px;color:#c9b8ff;margin-bottom:46px;text-shadow:0 0 18px rgba(178,60,255,.8)}
-
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;margin-top:20px}
-.card{
-  position:relative;border-radius:22px;padding:30px 22px;
-  background:var(--panel);
-  border:1px solid rgba(0,234,255,.25);
-  backdrop-filter:blur(10px);
-  box-shadow:0 0 30px rgba(0,0,0,.6);
-  opacity:0;transform:translateY(40px) rotateX(18deg);
-  transition:transform .25s ease;
-  transform-style:preserve-3d;
-  cursor:default;
-}
+.subtitle{font-family:'Orbitron';font-size:clamp(13px,2.4vw,18px);letter-spacing:6px;color:#c9b8ff;margin-bottom:14px;text-shadow:0 0 18px rgba(178,60,255,.8)}
+.invite-line{font-size:clamp(16px,2.6vw,20px);color:#e8e2ff;max-width:640px;margin:0 auto 46px;line-height:1.6}
+.invite-line b{color:var(--neon3);text-shadow:0 0 12px var(--neon3)}
+.invite-line .you{color:var(--neon2);text-shadow:0 0 14px var(--neon2);font-weight:800}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px;margin-top:20px}
+.card{position:relative;border-radius:22px;padding:30px 20px;background:var(--panel);border:1px solid rgba(0,234,255,.25);
+  backdrop-filter:blur(10px);box-shadow:0 0 30px rgba(0,0,0,.6);opacity:0;transform:translateY(40px) rotateX(18deg);
+  transition:transform .25s ease;transform-style:preserve-3d;cursor:default}
 .card.shown{animation:cardIn .9s cubic-bezier(.2,.9,.3,1.2) forwards}
 @keyframes cardIn{to{opacity:1;transform:translateY(0) rotateX(0)}}
-.card:hover{border-color:var(--nc,#00eaff);box-shadow:0 0 40px var(--nc,#00eaff), inset 0 0 30px color-mix(in srgb,var(--nc,#00eaff) 12%, transparent)}
+.card:hover{border-color:var(--nc,#00eaff);box-shadow:0 0 40px var(--nc,#00eaff), inset 0 0 30px rgba(255,255,255,.04)}
 .card .icon{font-size:46px;margin-bottom:14px;display:inline-block;animation:iconFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 14px var(--nc,#00eaff))}
-@keyframes iconFloat{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(4deg)}}
+@keyframes iconFloat{50%{transform:translateY(-10px) rotate(4deg)}}
 .card .label{font-family:'Orbitron';font-size:11px;letter-spacing:4px;color:var(--nc,#00eaff);margin-bottom:10px}
-.card .value{font-size:clamp(18px,3vw,24px);font-weight:800}
+.card .value{font-size:clamp(17px,2.8vw,23px);font-weight:800}
 .card .value small{display:block;font-size:13px;color:#9b93c9;margin-top:6px;font-weight:400}
-
 .card.place{cursor:pointer;text-decoration:none;color:#fff;display:block;overflow:hidden}
-.card.place::after{
-  content:"";position:absolute;top:-60%;left:-80%;width:60%;height:220%;
-  background:linear-gradient(105deg,transparent,rgba(255,255,255,.22),transparent);
-  transform:rotate(20deg);animation:shine 3.4s infinite;
-}
-@keyframes shine{0%{left:-80%}55%,100%{left:140%}}
+.card.place::after{content:"";position:absolute;top:-60%;left:-80%;width:60%;height:220%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.22),transparent);transform:rotate(20deg);animation:shine 3.4s infinite}
+@keyframes shine{55%,100%{left:140%}}
 .card.place .go{margin-top:12px;font-family:'Orbitron';font-size:12px;letter-spacing:3px;color:var(--neon3);animation:blink 1.2s infinite}
 @keyframes blink{50%{opacity:.35}}
-
-/* Кнопка-CTA */
-.cta{
-  margin-top:56px;display:inline-block;position:relative;
-  font-family:'Orbitron';font-weight:700;font-size:clamp(16px,3vw,22px);
-  letter-spacing:3px;padding:20px 54px;border-radius:16px;
-  color:#fff;background:linear-gradient(120deg,#7b2bff,#ff2d95,#ff9e00);
-  background-size:250% 100%;
-  border:none;cursor:pointer;
-  animation:ctaGrad 4s linear infinite;
-  box-shadow:0 0 40px rgba(255,45,149,.6),0 10px 40px rgba(0,0,0,.6);
-  transition:transform .2s;
-  overflow:hidden;
-}
+.cta{margin-top:56px;display:inline-block;position:relative;font-family:'Orbitron';font-weight:700;
+  font-size:clamp(16px,3vw,22px);letter-spacing:3px;padding:20px 54px;border-radius:16px;color:#fff;
+  background:linear-gradient(120deg,#7b2bff,#ff2d95,#ff9e00);background-size:250% 100%;border:none;cursor:pointer;
+  animation:ctaGrad 4s linear infinite;box-shadow:0 0 40px rgba(255,45,149,.6),0 10px 40px rgba(0,0,0,.6);
+  transition:transform .2s;overflow:hidden}
 @keyframes ctaGrad{to{background-position:250% 0}}
 .cta:hover{transform:scale(1.07) rotate(-1deg)}
 .cta:active{transform:scale(.96)}
-
-.burst{
-  position:fixed;width:8px;height:8px;border-radius:50%;pointer-events:none;z-index:60;
-  box-shadow:0 0 12px currentColor;background:currentColor;
-}
-
+.burst{position:fixed;width:8px;height:8px;border-radius:50%;pointer-events:none;z-index:60;box-shadow:0 0 12px currentColor;background:currentColor}
+.trail{position:fixed;width:14px;height:14px;border-radius:50%;pointer-events:none;z-index:54;
+  background:radial-gradient(circle,rgba(255,255,255,.9),rgba(0,234,255,.4) 55%,transparent 75%);
+  transform:translate(-50%,-50%);animation:trailFade .5s ease-out forwards}
+@keyframes trailFade{to{transform:translate(-50%,-50%) scale(.1);opacity:0}}
 .footer{margin-top:70px;font-size:13px;color:#7a72a8;letter-spacing:2px;font-family:'Orbitron'}
 .footer b{color:var(--neon2);text-shadow:0 0 12px var(--neon2)}
-
-.magnetar{position:fixed;width:10px;height:10px;border-radius:50%;pointer-events:none;z-index:1;
-  background:#ffe86e;box-shadow:0 0 18px #ffe86e,0 0 50px #ff9e00;
-  animation:magTwinkle var(--d,3s) infinite var(--dl,0s);
-}
-@keyframes magTwinkle{0%,100%{opacity:.9;transform:scale(1)}50%{opacity:.2;transform:scale(.5)}}
-
-@media (max-width:560px){
-  .blackhole{width:240px;height:240px}
-  .bh-core{inset:74px}.bh-ring.r2{inset:19px}.bh-ring.r3{inset:39px}
-}
+@media (max-width:560px){.pulsar{width:80px;height:80px}.pulsar .core{inset:24px}}
 </style>
 </head>
 <body>
 <canvas id="stars"></canvas>
+<canvas id="nebula"></canvas>
+<canvas id="bhCanvas"></canvas>
 <div class="vignette"></div>
 
-<div class="pulsar">
-  <div class="beam"></div>
-  <div class="beam b2"></div>
-  <div class="core"></div>
+<div class="hud">
+  <div class="hp">
+    <div class="name">ГИЛЬДИЯ ДРУЗЕЙ · FULL SQUAD</div>
+    <div class="bar"><div class="fill" id="hpFill"></div></div>
+  </div>
+  <div class="timer" id="timer">00:00:00</div>
+  <div class="round">РАУНД <b>1</b> · МОД: <b>ОТКРЫТЫЙ</b></div>
 </div>
 
-<div class="blackhole">
-  <div class="bh-ring"></div>
-  <div class="bh-ring r2"></div>
-  <div class="bh-ring r3"></div>
-  <div class="bh-flare"></div>
-  <div class="bh-core"></div>
+<div class="pulsar">
+  <div class="beam"></div><div class="beam b2"></div><div class="core"></div>
 </div>
 
 <div class="wrap">
-  <span class="tag">⚡ SYSTEM ALERT · ПРИГЛАШЕНИЕ ⚡</span>
-  <h1><span class="glitch" data-text="БРО / МИША">БРО / МИША</span></h1>
-  <div class="subtitle">— ДЕНЬ РОЖДЕНИЯ: ЗВЁЗДНЫЙ РАУНД —</div>
+  <span class="tag">⚡ RIVALS · ОТКРЫТЫЙ РАУНД · ВСЕ В ДЕЛЕ ⚡</span>
+  <h1><span class="glitch" data-text="ДРУЗЬЯ!">ДРУЗЬЯ!</span></h1>
+  <div class="subtitle">ДЕНЬ РОЖДЕНИЯ МИШИ · ЗВЁЗДНЫЙ РАУНД</div>
+  <div class="invite-line">
+    Это приглашение для <span class="you">КАЖДОГО</span>! Друзья, бро, класс, гильдия —
+    кого ждём? <b>ВСЕХ!</b> Без исключений: whoever you are — заходи в лобби,
+    раунд начинается в <b>субботу</b>. No one gets left behind! 🚀
+  </div>
 
   <div class="cards">
     <div class="card" style="--nc:#00eaff">
       <div class="icon">📅</div>
       <div class="label">ДАТА</div>
       <div class="value">28 НОЯБРЯ 2026
-        <small>СУББОТА · не опоздай, чемпион!</small>
+        <small>СУББОТА · свободный вход для всех</small>
       </div>
     </div>
     <div class="card" style="--nc:#a6ff00">
       <div class="icon">⏱️</div>
-      <div class="label">ВРЕМЯ</div>
+      <div class="label">ВРЕМЯ РАУНДА</div>
       <div class="value">12:00 — 13:00
-        <small>60 минут чистого космоса</small>
+        <small>60 минут космоса на всю толпу</small>
       </div>
     </div>
     <a class="card place" style="--nc:#ff2d95" href="https://yandex.ru/maps/?text=батутный центр Небо Московский 1-й микрорайон 57" target="_blank" rel="noopener">
       <div class="icon">🚀</div>
-      <div class="label">ЛОКАЦИЯ · ЖМИ!</div>
+      <div class="label">АРЕНА · ЖМИ!</div>
       <div class="value">Батутный центр «НЕБО»
         <small>г. Московский, 1-й микрорайон, 57</small>
       </div>
       <div class="go">▶ ОТКРЫТЬ НА КАРТЕ</div>
     </a>
+    <div class="card" style="--nc:#ff9e00">
+      <div class="icon">🫵</div>
+      <div class="label">КОГО ЖДЁМ</div>
+      <div class="value">АБСОЛЮТНО ВСЕХ!
+        <small>+1, друзья друзей — welcome to the lobby</small>
+      </div>
+    </div>
   </div>
 
-  <button class="cta" id="cta">ПРИНЯТЬ ВЫЗОВ 🎮</button>
+  <button class="cta" id="cta">ВСТУПИТЬ В ЛОББИ 🎮</button>
 
-  <div class="footer">MISSION: <b>VICTORY</b> · LOOT: ВЕСЕЛЬЕ · STATUS: <b>WAITING FOR YOU</b></div>
+  <div class="footer">MISSION: <b>FUN</b> · LOOT: ВЕСЕЛЬЕ · STATUS: <b>ALL INVITED</b></div>
 </div>
 
 <script>
-/* ЗВЁЗДНОЕ НЕБО */
-const cv=document.getElementById('stars'),cx=cv.getContext('2d');
-let W,H,stars=[],comets=[];
-function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;
-  stars=Array.from({length:Math.min(320,W*H/3500)},()=>({
-    x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+.3,
-    vy:Math.random()*.35+.08,tw:Math.random()*Math.PI*2,ts:Math.random()*.05+.01,
-    hue:[190,280,320,55][Math.floor(Math.random()*4)]
-  }));
+/* ====== РЕАЛИСТИЧНАЯ ТУМАННОСТЬ (пререндер) ====== */
+const neb=document.getElementById('nebula'),nx=neb.getContext('2d');
+let W,H,nebOff,par={x:0,y:0};
+const PALETTE=[[70,25,140],[15,45,130],[150,25,100],[25,90,150],[100,10,170],[200,60,40]];
+function buildNebula(){
+  W=neb.width=innerWidth;neb.height=innerHeight;H=neb.height;
+  nebOff=document.createElement('canvas');nebOff.width=W;nebOff.height=H;
+  const o=nebOff.getContext('2d');o.globalCompositeOperation='screen';
+  for(let i=0;i<90;i++){
+    const x=Math.random()*W,y=Math.random()*H,r=140+Math.random()*380;
+    const c=PALETTE[i%PALETTE.length];
+    const g=o.createRadialGradient(x,y,0,x,y,r);
+    g.addColorStop(0,`rgba(${c[0]},${c[1]},${c[2]},${0.05+Math.random()*0.09})`);
+    g.addColorStop(.55,`rgba(${c[0]},${c[1]},${c[2]},${0.02+Math.random()*0.03})`);
+    g.addColorStop(1,'rgba(0,0,0,0)');
+    o.fillStyle=g;o.beginPath();o.arc(x,y,r,0,7);o.fill();
+  }
+  // звёздная пыль внутри туманности
+  for(let i=0;i<400;i++){
+    const x=Math.random()*W,y=Math.random()*H;
+    o.fillStyle=`rgba(255,255,255,${Math.random()*.5})`;
+    o.beginPath();o.arc(x,y,Math.random()*1.1,0,7);o.fill();
+  }
 }
-addEventListener('resize',resize);resize();
-function spawnComet(){comets.push({x:Math.random()*W*.8,y:-10,vx:2+Math.random()*3,vy:3+Math.random()*3,life:1});}
-setInterval(spawnComet,2600);
-(function loop(){
-  cx.clearRect(0,0,W,H);
-  stars.forEach(s=>{
-    s.y+=s.vy;s.tw+=s.ts;
-    if(s.y>H+4){s.y=-4;s.x=Math.random()*W;}
-    const a=.35+Math.abs(Math.sin(s.tw))*.65;
-    cx.beginPath();cx.arc(s.x,s.y,s.r,0,7);
-    cx.fillStyle=`hsla(${s.hue},100%,75%,${a})`;
-    cx.shadowColor=`hsl(${s.hue},100%,70%)`;cx.shadowBlur=6;cx.fill();cx.shadowBlur=0;
-  });
-  comets=comets.filter(c=>c.life>0);
-  comets.forEach(c=>{
-    c.x+=c.vx;c.y+=c.vy;c.life-=.012;
-    const g=cx.createLinearGradient(c.x,c.y,c.x-c.vx*14,c.y-c.vy*14);
-    g.addColorStop(0,`rgba(255,255,255,${c.life})`);
-    g.addColorStop(1,'rgba(0,234,255,0)');
-    cx.strokeStyle=g;cx.lineWidth=2.4;cx.beginPath();
-    cx.moveTo(c.x,c.y);cx.lineTo(c.x-c.vx*14,c.y-c.vy*14);cx.stroke();
-  });
-  requestAnimationFrame(loop);
-})();
 
-/* КВАЗАРЫ + МАГНЕТАРЫ */
+/* ====== РЕАЛИСТИЧНЫЕ ЗВЁЗДЫ (слои + дифракционные лучи) ====== */
+const cv=document.getElementById('stars'),cx=cv.getContext('2d');
+let layers=[],comets=[];
+function buildStars(){
+  cv.width=W;cv.height=H;layers=[];
+  const defs=[
+    {n:260,size:.7,vy:.06,bright:false},
+    {n:130,size:1.2,vy:.16,bright:false},
+    {n:16,size:2.2,vy:.3,bright:true},
+  ];
+  defs.forEach(d=>{
+    const arr=[];
+    for(let i=0;i<d.n;i++)arr.push({
+      x:Math.random()*W,y:Math.random()*H,r:Math.random()*d.size+.3,
+      vy:d.vy*(0.5+Math.random()),tw:Math.random()*Math.PI*2,ts:Math.random()*.04+.008,
+      hue:Math.random()<.12?45:(Math.random()<.5?200:0),sat:Math.random()<.12?60:0,
+      bright:d.bright&&Math.random()<.4
+    });
+    layers.push({stars:arr,glow:d.bright});
+  });
+}
+function drawStar(s){
+  s.y+=s.vy;s.tw+=s.ts;if(s.y>H+4){s.y=-4;s.x=Math.random()*W;}
+  const a=.3+Math.abs(Math.sin(s.tw))*.7;
+  const col=s.sat?`hsla(${s.hue},${s.sat}%,78%,${a})`:`rgba(255,255,255,${a})`;
+  if(s.bright){
+    // яркая звезда с дифракционными лучами — как на astrophoto
+    const L=10+s.r*9;
+    const g=cx.createRadialGradient(s.x,s.y,0,s.x,s.y,L);
+    g.addColorStop(0,`rgba(255,255,255,${a})`);g.addColorStop(.3,`rgba(190,220,255,${a*.35})`);g.addColorStop(1,'rgba(0,0,0,0)');
+    cx.fillStyle=g;cx.beginPath();cx.arc(s.x,s.y,L,0,7);cx.fill();
+    cx.strokeStyle=`rgba(255,255,255,${a*.5})`;cx.lineWidth=.7;
+    cx.beginPath();cx.moveTo(s.x-L,s.y);cx.lineTo(s.x+L,s.y);
+    cx.moveTo(s.x,s.y-L);cx.lineTo(s.x,s.y+L);cx.stroke();
+  }else{
+    cx.fillStyle=col;cx.beginPath();cx.arc(s.x,s.y,s.r,0,7);cx.fill();
+  }
+}
+function spawnComet(){comets.push({x:Math.random()*W*.8,y:-10,vx:2+Math.random()*3,vy:3+Math.random()*3,life:1});}
+
+/* ====== РЕАЛИСТИЧНАЯ ЧЁРНАЯ ДЫРА (аккреционный диск + эффект Допплера) ====== */
+const bh=document.getElementById('bhCanvas'),bx=bh.getContext('2d');
+function sizeBH(){
+  bh.width=Math.min(innerWidth,620);bh.height=380;
+}
+function drawBH(t){
+  const W2=bh.width,H2=bh.height,cxp=W2/2,cyp=H2*0.55;
+  bx.clearRect(0,0,W2,H2);
+  bx.save();bx.translate(cxp,cyp);bx.rotate(-0.16);
+  bx.globalCompositeOperation='lighter';
+  // вращающийся диск: горбатые клочья с яркостью по эффекту Допплера (левая сторона ярче)
+  for(let i=0;i<110;i++){
+    const a=t*.22+i*.71;
+    const rad=84+(i%34)/34*96+Math.sin(i*13.7)*9;
+    const x=Math.cos(a)*rad,y=Math.sin(a)*rad*.30;
+    const doppler=(Math.cos(a+Math.PI/2)+1)/2;      // 0..1
+    const heat=(1-(rad-84)/96);                     // ближе к центру = горячее
+    const R=18+doppler*26,alpha=.045+doppler*.09+heat*.03;
+    const hue=30+heat*22-doppler*8;
+    const g=bx.createRadialGradient(x,y,0,x,y,R);
+    g.addColorStop(0,`hsla(${hue},100%,${60+doppler*32}%,${alpha})`);
+    g.addColorStop(1,'hsla(30,100%,50%,0)');
+    bx.fillStyle=g;bx.beginPath();bx.arc(x,y,R,0,7);bx.fill();
+  }
+  // фотонное кольцо
+  bx.globalCompositeOperation='source-over';
+  bx.save();bx.shadowColor='#fff';bx.shadowBlur=26;
+  bx.strokeStyle='rgba(255,250,235,.95)';bx.lineWidth=2.2;
+  bx.beginPath();bx.ellipse(0,0,70,70*.96,0,0,7);bx.stroke();bx.restore();
+  // тень чёрной дыры
+  const sg=bx.createRadialGradient(0,0,50,0,0,74);
+  sg.addColorStop(0,'#000');sg.addColorStop(.86,'#000');sg.addColorStop(1,'rgba(0,0,0,0)');
+  bx.fillStyle=sg;bx.beginPath();bx.arc(0,0,74,0,7);bx.fill();
+  // линзированный верх диска (дуга над тенью — как в «Интерстелларе»)
+  bx.globalCompositeOperation='lighter';
+  const lg=bx.createLinearGradient(-70,-52,70,-52);
+  lg.addColorStop(0,'rgba(255,180,80,.5)');lg.addColorStop(.5,'rgba(255,230,190,.65)');lg.addColorStop(1,'rgba(255,150,60,.35)');
+  bx.strokeStyle=lg;bx.lineWidth=7;bx.lineCap='round';
+  bx.beginPath();bx.ellipse(0,0,69,20,0,Math.PI*1.06,Math.PI*1.94);bx.stroke();
+  bx.restore();
+  // внешнее свечение
+  const og=bx.createRadialGradient(cxp,cyp,60,cxp,cyp,250);
+  og.addColorStop(0,'rgba(255,140,50,.14)');og.addColorStop(.5,'rgba(150,40,180,.08)');og.addColorStop(1,'rgba(0,0,0,0)');
+  bx.globalCompositeOperation='screen';
+  bx.fillStyle=og;bx.beginPath();bx.arc(cxp,cyp,250,0,7);bx.fill();
+  bx.globalCompositeOperation='source-over';
+}
+
+/* ====== ГЛАВНЫЙ ЦИКЛ ====== */
+addEventListener('resize',()=>{buildNebula();buildStars();sizeBH();});
+buildNebula();buildStars();sizeBH();
+setInterval(spawnComet,2600);
+(function loop(t){
+  t*=.001;
+  nx.clearRect(0,0,W,H);
+  const px=par.x*14,py=par.y*10;
+  nx.drawImage(nebOff,px-20,py-20,W+40,H+40);
+  cx.clearRect(0,0,W,H);
+  layers.forEach(l=>l.stars.forEach(drawStar));
+  comets=comets.filter(c=>c.life>0);
+  comets.forEach(c=>{c.x+=c.vx;c.y+=c.vy;c.life-=.012;
+    const g=cx.createLinearGradient(c.x,c.y,c.x-c.vx*14,c.y-c.vy*14);
+    g.addColorStop(0,`rgba(255,255,255,${c.life})`);g.addColorStop(1,'rgba(0,234,255,0)');
+    cx.strokeStyle=g;cx.lineWidth=2.4;cx.beginPath();
+    cx.moveTo(c.x,c.y);cx.lineTo(c.x-c.vx*14,c.y-c.vy*14);cx.stroke();});
+  drawBH(t);
+  requestAnimationFrame(loop);
+})(0);
+addEventListener('mousemove',e=>{
+  par.x=e.clientX/innerWidth-.5;par.y=e.clientY/innerHeight-.5;
+});
+
+/* ====== КВАЗАРЫ + МАГНЕТАРЫ ====== */
 const quasarColors=['#00eaff','#ff2d95','#a6ff00','#ff9e00','#b26bff'];
 for(let i=0;i<7;i++){
   const q=document.createElement('div');q.className='quasar';
-  q.style.left=(5+Math.random()*90)+'vw';
-  q.style.top=(5+Math.random()*80)+'vh';
+  q.style.left=(5+Math.random()*90)+'vw';q.style.top=(5+Math.random()*80)+'vh';
   q.style.setProperty('--d',(5+Math.random()*7)+'s');
   q.style.setProperty('--dl',(Math.random()*8)+'s');
   q.style.setProperty('--qc',quasarColors[i%quasarColors.length]);
-  document.body.appendChild(q);
-}
+  document.body.appendChild(q);}
 for(let i=0;i<12;i++){
   const m=document.createElement('div');m.className='magnetar';
-  m.style.left=(3+Math.random()*94)+'vw';
-  m.style.top=(3+Math.random()*88)+'vh';
+  m.style.left=(3+Math.random()*94)+'vw';m.style.top=(3+Math.random()*88)+'vh';
   m.style.setProperty('--d',(1.5+Math.random()*3)+'s');
   m.style.setProperty('--dl',(Math.random()*3)+'s');
-  document.body.appendChild(m);
-}
+  document.body.appendChild(m);}
 
-/* ПОЯВЛЕНИЕ КАРТ */
+/* ====== RIVALS: МОЛНИИ ====== */
+function lightning(x1,y1,x2,y2){
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('class','lightning');svg.style.width=innerWidth+'px';svg.style.height=innerHeight+'px';
+  const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+  let d=`M${x1},${y1}`,seg=6;
+  for(let i=1;i<=seg;i++){
+    const t=i/seg,mx=x1+(x2-x1)*t,my=y1+(y2-y1)*t;
+    const off=(i<seg)?(Math.random()-.5)*90:0;
+    d+=` L${mx+off},${my+off*.5}`;}
+  path.setAttribute('d',d);svg.appendChild(path);document.body.appendChild(svg);
+  svg.animate([{opacity:1},{opacity:0}],{duration:380,easing:'ease-out'}).onfinish=()=>svg.remove();
+}
+setInterval(()=>{
+  lightning(Math.random()*innerWidth,-10,Math.random()*innerWidth,innerHeight*.4+Math.random()*innerHeight*.4);
+},4200);
+
+/* ====== RIVALS: ХИТМАРКЕР + УРОН + ЗВУК ====== */
+function sfx(freq=900,dur=.07,type='square',vol=.06){
+  try{
+    const ac=sfx.ctx||(sfx.ctx=new (window.AudioContext||window.webkitAudioContext)());
+    const o=ac.createOscillator(),g=ac.createGain();
+    o.type=type;o.frequency.value=freq;
+    g.gain.setValueAtTime(vol,ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+dur);
+    o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+dur);
+  }catch(e){}
+}
+function hitmarker(x,y,crit){
+  const h=document.createElement('div');h.className='hitmarker'+(crit?' red':'');
+  h.style.left=x+'px';h.style.top=y+'px';
+  h.innerHTML='<i></i><i></i><i></i><i></i>';
+  document.body.appendChild(h);setTimeout(()=>h.remove(),500);
+  const d=document.createElement('div');d.className='dmg'+(crit?' crit':'');
+  d.textContent=crit?'CRIT!':Math.floor(Math.random()*90+10);
+  d.style.left=(x+(Math.random()*40-20))+'px';d.style.top=(y-30)+'px';
+  document.body.appendChild(d);setTimeout(()=>d.remove(),1000);
+  sfx(crit?1600:1100,crit?.12:.07);if(crit)sfx(500,.15,'sawtooth');
+}
+document.addEventListener('click',e=>{
+  if(e.target.closest('a,button'))return;
+  hitmarker(e.clientX,e.clientY,Math.random()<.2);
+});
+
+/* ====== RIVALS: TOAST'Ы ====== */
+function toast(big,sub){
+  const t=document.createElement('div');t.className='toast';
+  t.innerHTML=`<div class="big">${big}</div><div class="sub">${sub}</div>`;
+  document.body.appendChild(t);setTimeout(()=>t.remove(),2700);
+}
+setTimeout(()=>toast('⚡ LOBBY OPEN: ВСЕ В ДЕЛЕ ⚡','ДР Миши · 28.11.2026 · арена «НЕБО»'),1500);
+setInterval(()=>toast(
+  ['⚡ ELIMINATED: СКУКА ⚡','🔥 HEADSHOT: ГРУСТЬ 🔥','💫 COMBO x∞: ВЕСЕЛЬЕ 💫'][Math.floor(Math.random()*3)],
+  'Открытый раунд — заходи, друг!'),14000);
+
+/* ====== RIVALS: HP + ТАЙМЕР ====== */
+let hp=100;
+setInterval(()=>{
+  hp=hp<=20?100:hp-15;
+  const f=document.getElementById('hpFill');
+  f.style.width=hp+'%';
+  f.style.background=hp>50?'linear-gradient(90deg,#00eaff,#a6ff00)':
+    hp>25?'linear-gradient(90deg,#ff9e00,#ffdd33)':'linear-gradient(90deg,#ff3355,#ff2d95)';
+},3000);
+const end=new Date('2026-11-28T12:00:00');
+setInterval(()=>{
+  const diff=Math.max(0,end-Date.now());
+  const d=Math.floor(diff/864e5),h=Math.floor(diff/36e5)%24,m=Math.floor(diff/6e4)%60,s=Math.floor(diff/1e3)%60;
+  document.getElementById('timer').textContent=
+    (d>0?d+'d ':'')+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+},1000);
+
+/* ====== КАРТЫ + 3D ====== */
 const io=new IntersectionObserver(es=>es.forEach(e=>{
   if(e.isIntersecting){e.target.classList.add('shown');io.unobserve(e.target);}
 }),{threshold:.15});
-document.querySelectorAll('.card').forEach((c,i)=>{
-  c.style.animationDelay=(i*.15)+'s';io.observe(c);
-});
-
-/* 3D-НАКЛОН КАРТ */
+document.querySelectorAll('.card').forEach((c,i)=>{c.style.animationDelay=(i*.15)+'s';io.observe(c);});
 document.querySelectorAll('.card').forEach(card=>{
   card.addEventListener('mousemove',e=>{
     const r=card.getBoundingClientRect();
-    const dx=(e.clientX-r.left)/r.width-.5, dy=(e.clientY-r.top)/r.height-.5;
+    const dx=(e.clientX-r.left)/r.width-.5,dy=(e.clientY-r.top)/r.height-.5;
     card.style.transform=`perspective(700px) rotateY(${dx*14}deg) rotateX(${-dy*14}deg) translateY(-6px)`;
   });
   card.addEventListener('mouseleave',()=>card.style.transform='');
 });
 
-/* ВЗРЫВ ЧАСТИЦ */
+/* ====== ЧАСТИЦЫ + ТРЕЙЛ ====== */
 function burst(x,y,n=26){
   for(let i=0;i<n;i++){
     const p=document.createElement('div');p.className='burst';
@@ -335,23 +466,24 @@ function burst(x,y,n=26){
     p.style.color=c;p.style.background=c;p.style.left=x+'px';p.style.top=y+'px';
     document.body.appendChild(p);
     const a=Math.random()*Math.PI*2,d=60+Math.random()*180;
-    p.animate([
-      {transform:'translate(0,0) scale(1)',opacity:1},
+    p.animate([{transform:'translate(0,0) scale(1)',opacity:1},
       {transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px) scale(0)`,opacity:0}
     ],{duration:700+Math.random()*600,easing:'cubic-bezier(.1,.8,.3,1)'}).onfinish=()=>p.remove();
   }
 }
+let lastTrail=0;
+document.addEventListener('mousemove',e=>{
+  const now=performance.now();if(now-lastTrail<28)return;lastTrail=now;
+  const t=document.createElement('div');t.className='trail';
+  t.style.left=e.clientX+'px';t.style.top=e.clientY+'px';
+  document.body.appendChild(t);setTimeout(()=>t.remove(),500);
+});
 document.getElementById('cta').addEventListener('click',e=>{
   burst(e.clientX,e.clientY,60);
-  const b=e.currentTarget;
-  b.textContent='✔ ВЫЗОВ ПРИНЯТ! ЖДЁМ ТЕБЯ, ЧЕМПИОН 🏆';
-  b.style.animation='none';
-  setTimeout(()=>{b.textContent='ПРИНЯТЬ ВЫЗОВ 🎮';b.style.animation='';},3200);
-});
-
-document.addEventListener('click',e=>{
-  if(e.target.closest('.card,.cta'))return;
-  burst(e.clientX,e.clientY,12);
+  sfx(600,.15,'sawtooth');sfx(1200,.2,'square');
+  toast('🏆 ТЫ В ЛОББИ! 🏆','Ждём тебя и всех твоих, чемпион');
+  const b=e.currentTarget;b.textContent='✔ ЗАПИСАНО! SEE YOU IN SPACE';
+  setTimeout(()=>b.textContent='ВСТУПИТЬ В ЛОББИ 🎮',3200);
 });
 </script>
 </body>
