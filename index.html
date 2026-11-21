@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚡ ДР Бро/Миша — INVITATION ⚡</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rubik:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --neon1:#00eaff;
+  --neon2:#ff2d95;
+  --neon3:#a6ff00;
+  --neon4:#ff9e00;
+  --bg:#050108;
+  --panel:rgba(10,6,25,.75);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{
+  background:radial-gradient(ellipse at 50% -10%, #14082e 0%, #06020f 45%, #020005 100%);
+  color:#fff;
+  font-family:'Rubik',sans-serif;
+  min-height:100vh;
+  cursor:crosshair;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:50;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.015) 0 1px,transparent 1px 3px);
+  mix-blend-mode:overlay;
+}
+#stars{position:fixed;inset:0;z-index:0}
+.vignette{position:fixed;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.75) 100%)}
+
+/* ============ НЕЙТРОННАЯ ЗВЕЗДА / ПУЛЬСАР ============ */
+.pulsar{position:fixed;top:12%;right:6%;width:120px;height:120px;z-index:1;pointer-events:none}
+.pulsar .core{
+  position:absolute;inset:35px;border-radius:50%;
+  background:radial-gradient(circle,#fff 0%,#9df2ff 35%,rgba(0,180,255,.0) 72%);
+  box-shadow:0 0 30px #9df2ff,0 0 80px rgba(0,200,255,.8),0 0 160px rgba(0,150,255,.5);
+  animation:pulseCore 1.4s infinite ease-in-out;
+}
+.pulsar .beam{
+  position:absolute;top:50%;left:50%;width:56vw;height:10px;
+  background:linear-gradient(90deg,transparent,rgba(0,234,255,.85),rgba(255,255,255,.95),rgba(0,234,255,.85),transparent);
+  transform-origin:left center;border-radius:50%;
+  filter:blur(1px);
+  animation:spinBeam 6s linear infinite;
+}
+.pulsar .beam.b2{animation-delay:-3s;opacity:.5}
+@keyframes spinBeam{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes pulseCore{0%,100%{transform:scale(1)}50%{transform:scale(1.28)}}
+
+/* ============ ЧЁРНАЯ ДЫРА ============ */
+.blackhole{position:fixed;bottom:4%;left:50%;transform:translateX(-50%);width:340px;height:340px;z-index:1;pointer-events:none}
+.bh-ring{
+  position:absolute;inset:0;border-radius:50%;
+  border:2px solid transparent;
+  border-top-color:var(--neon2);
+  border-right-color:var(--neon1);
+  filter:drop-shadow(0 0 14px var(--neon2));
+  animation:bhSpin 3s linear infinite;
+}
+.bh-ring.r2{inset:26px;animation-duration:4.5s;animation-direction:reverse;border-top-color:var(--neon4);border-right-color:var(--neon3)}
+.bh-ring.r3{inset:54px;animation-duration:6.5s;border-top-color:#b26bff;border-right-color:var(--neon1)}
+@keyframes bhSpin{to{transform:rotate(360deg)}}
+.bh-core{
+  position:absolute;inset:104px;border-radius:50%;
+  background:radial-gradient(circle,#000 55%,#12002e 78%,rgba(120,0,255,.55) 88%,transparent 96%);
+  box-shadow:0 0 60px rgba(178,60,255,.9), inset 0 0 50px #000;
+  animation:bhBreath 4s ease-in-out infinite;
+}
+@keyframes bhBreath{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.bh-flare{
+  position:absolute;inset:118px;border-radius:50%;
+  border:1px solid rgba(255,45,149,.0);
+  animation:bhFlare 2.2s ease-out infinite;
+}
+@keyframes bhFlare{
+  0%{box-shadow:0 0 0 0 rgba(255,45,149,.55);opacity:1}
+  100%{box-shadow:0 0 90px 40px rgba(255,45,149,0);opacity:0}
+}
+
+/* ============ КВАЗАР-ВСПЫШКИ ============ */
+.quasar{
+  position:fixed;width:6px;height:6px;border-radius:50%;z-index:1;pointer-events:none;
+  background:#fff;box-shadow:0 0 20px #fff,0 0 50px var(--qc,#00eaff);
+  animation:quasarPop var(--d,6s) ease-in-out var(--dl,0s) infinite;
+}
+@keyframes quasarPop{
+  0%,88%{opacity:0;transform:scale(0)}
+  90%{opacity:1;transform:scale(1)}
+  93%{opacity:.2;transform:scale(.4)}
+  96%{opacity:1;transform:scale(1.6)}
+  100%{opacity:0;transform:scale(2.4)}
+}
+
+/* ============ КОНТЕНТ ============ */
+.wrap{position:relative;z-index:10;max-width:900px;margin:0 auto;padding:60px 20px 160px;text-align:center}
+
+.tag{
+  display:inline-block;padding:8px 22px;border-radius:999px;
+  border:1px solid rgba(0,234,255,.5);
+  background:rgba(0,234,255,.06);
+  font-family:'Orbitron';font-size:13px;letter-spacing:4px;color:var(--neon1);
+  box-shadow:0 0 24px rgba(0,234,255,.25), inset 0 0 18px rgba(0,234,255,.12);
+  animation:tagFlicker 5s infinite;
+}
+@keyframes tagFlicker{0%,100%{opacity:1}92%{opacity:1}93%{opacity:.3}94%{opacity:1}96%{opacity:.5}97%{opacity:1}}
+
+h1{
+  font-family:'Orbitron';font-weight:900;
+  font-size:clamp(38px,8vw,84px);
+  margin:26px 0 8px;letter-spacing:2px;line-height:1.05;
+  background:linear-gradient(90deg,#00eaff,#fff,#ff2d95,#a6ff00,#00eaff);
+  background-size:300% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:gradShift 6s linear infinite;
+  filter:drop-shadow(0 0 22px rgba(0,234,255,.55));
+}
+@keyframes gradShift{to{background-position:300% 0}}
+
+.glitch{position:relative;display:inline-block}
+.glitch::before,.glitch::after{
+  content:attr(data-text);position:absolute;left:0;top:0;width:100%;
+  -webkit-background-clip:text;background-clip:text;
+}
+.glitch::before{color:#0ff;transform:translate(-3px,-2px);clip-path:inset(0 0 55% 0);animation:gl1 2.4s infinite steps(2);opacity:.8}
+.glitch::after{color:#f0f;transform:translate(3px,2px);clip-path:inset(55% 0 0 0);animation:gl2 2.1s infinite steps(2);opacity:.8}
+@keyframes gl1{0%,88%,100%{clip-path:inset(0 0 100% 0)}90%{clip-path:inset(0 0 55% 0)}94%{clip-path:inset(30% 0 30% 0)}}
+@keyframes gl2{0%,88%,100%{clip-path:inset(100% 0 0 0)}91%{clip-path:inset(55% 0 0 0)}95%{clip-path:inset(10% 0 60% 0)}}
+
+.subtitle{font-family:'Orbitron';font-size:clamp(13px,2.4vw,18px);letter-spacing:6px;color:#c9b8ff;margin-bottom:46px;text-shadow:0 0 18px rgba(178,60,255,.8)}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;margin-top:20px}
+.card{
+  position:relative;border-radius:22px;padding:30px 22px;
+  background:var(--panel);
+  border:1px solid rgba(0,234,255,.25);
+  backdrop-filter:blur(10px);
+  box-shadow:0 0 30px rgba(0,0,0,.6);
+  opacity:0;transform:translateY(40px) rotateX(18deg);
+  transition:transform .25s ease;
+  transform-style:preserve-3d;
+  cursor:default;
+}
+.card.shown{animation:cardIn .9s cubic-bezier(.2,.9,.3,1.2) forwards}
+@keyframes cardIn{to{opacity:1;transform:translateY(0) rotateX(0)}}
+.card:hover{border-color:var(--nc,#00eaff);box-shadow:0 0 40px var(--nc,#00eaff), inset 0 0 30px color-mix(in srgb,var(--nc,#00eaff) 12%, transparent)}
+.card .icon{font-size:46px;margin-bottom:14px;display:inline-block;animation:iconFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 14px var(--nc,#00eaff))}
+@keyframes iconFloat{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(4deg)}}
+.card .label{font-family:'Orbitron';font-size:11px;letter-spacing:4px;color:var(--nc,#00eaff);margin-bottom:10px}
+.card .value{font-size:clamp(18px,3vw,24px);font-weight:800}
+.card .value small{display:block;font-size:13px;color:#9b93c9;margin-top:6px;font-weight:400}
+
+.card.place{cursor:pointer;text-decoration:none;color:#fff;display:block;overflow:hidden}
+.card.place::after{
+  content:"";position:absolute;top:-60%;left:-80%;width:60%;height:220%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.22),transparent);
+  transform:rotate(20deg);animation:shine 3.4s infinite;
+}
+@keyframes shine{0%{left:-80%}55%,100%{left:140%}}
+.card.place .go{margin-top:12px;font-family:'Orbitron';font-size:12px;letter-spacing:3px;color:var(--neon3);animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.35}}
+
+/* Кнопка-CTA */
+.cta{
+  margin-top:56px;display:inline-block;position:relative;
+  font-family:'Orbitron';font-weight:700;font-size:clamp(16px,3vw,22px);
+  letter-spacing:3px;padding:20px 54px;border-radius:16px;
+  color:#fff;background:linear-gradient(120deg,#7b2bff,#ff2d95,#ff9e00);
+  background-size:250% 100%;
+  border:none;cursor:pointer;
+  animation:ctaGrad 4s linear infinite;
+  box-shadow:0 0 40px rgba(255,45,149,.6),0 10px 40px rgba(0,0,0,.6);
+  transition:transform .2s;
+  overflow:hidden;
+}
+@keyframes ctaGrad{to{background-position:250% 0}}
+.cta:hover{transform:scale(1.07) rotate(-1deg)}
+.cta:active{transform:scale(.96)}
+
+.burst{
+  position:fixed;width:8px;height:8px;border-radius:50%;pointer-events:none;z-index:60;
+  box-shadow:0 0 12px currentColor;background:currentColor;
+}
+
+.footer{margin-top:70px;font-size:13px;color:#7a72a8;letter-spacing:2px;font-family:'Orbitron'}
+.footer b{color:var(--neon2);text-shadow:0 0 12px var(--neon2)}
+
+.magnetar{position:fixed;width:10px;height:10px;border-radius:50%;pointer-events:none;z-index:1;
+  background:#ffe86e;box-shadow:0 0 18px #ffe86e,0 0 50px #ff9e00;
+  animation:magTwinkle var(--d,3s) infinite var(--dl,0s);
+}
+@keyframes magTwinkle{0%,100%{opacity:.9;transform:scale(1)}50%{opacity:.2;transform:scale(.5)}}
+
+@media (max-width:560px){
+  .blackhole{width:240px;height:240px}
+  .bh-core{inset:74px}.bh-ring.r2{inset:19px}.bh-ring.r3{inset:39px}
+}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<div class="vignette"></div>
+
+<div class="pulsar">
+  <div class="beam"></div>
+  <div class="beam b2"></div>
+  <div class="core"></div>
+</div>
+
+<div class="blackhole">
+  <div class="bh-ring"></div>
+  <div class="bh-ring r2"></div>
+  <div class="bh-ring r3"></div>
+  <div class="bh-flare"></div>
+  <div class="bh-core"></div>
+</div>
+
+<div class="wrap">
+  <span class="tag">⚡ SYSTEM ALERT · ПРИГЛАШЕНИЕ ⚡</span>
+  <h1><span class="glitch" data-text="БРО / МИША">БРО / МИША</span></h1>
+  <div class="subtitle">— ДЕНЬ РОЖДЕНИЯ: ЗВЁЗДНЫЙ РАУНД —</div>
+
+  <div class="cards">
+    <div class="card" style="--nc:#00eaff">
+      <div class="icon">📅</div>
+      <div class="label">ДАТА</div>
+      <div class="value">28 НОЯБРЯ 2026
+        <small>СУББОТА · не опоздай, чемпион!</small>
+      </div>
+    </div>
+    <div class="card" style="--nc:#a6ff00">
+      <div class="icon">⏱️</div>
+      <div class="label">ВРЕМЯ</div>
+      <div class="value">12:00 — 13:00
+        <small>60 минут чистого космоса</small>
+      </div>
+    </div>
+    <a class="card place" style="--nc:#ff2d95" href="https://yandex.ru/maps/?text=батутный центр Небо Московский 1-й микрорайон 57" target="_blank" rel="noopener">
+      <div class="icon">🚀</div>
+      <div class="label">ЛОКАЦИЯ · ЖМИ!</div>
+      <div class="value">Батутный центр «НЕБО»
+        <small>г. Московский, 1-й микрорайон, 57</small>
+      </div>
+      <div class="go">▶ ОТКРЫТЬ НА КАРТЕ</div>
+    </a>
+  </div>
+
+  <button class="cta" id="cta">ПРИНЯТЬ ВЫЗОВ 🎮</button>
+
+  <div class="footer">MISSION: <b>VICTORY</b> · LOOT: ВЕСЕЛЬЕ · STATUS: <b>WAITING FOR YOU</b></div>
+</div>
+
+<script>
+/* ЗВЁЗДНОЕ НЕБО */
+const cv=document.getElementById('stars'),cx=cv.getContext('2d');
+let W,H,stars=[],comets=[];
+function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;
+  stars=Array.from({length:Math.min(320,W*H/3500)},()=>({
+    x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+.3,
+    vy:Math.random()*.35+.08,tw:Math.random()*Math.PI*2,ts:Math.random()*.05+.01,
+    hue:[190,280,320,55][Math.floor(Math.random()*4)]
+  }));
+}
+addEventListener('resize',resize);resize();
+function spawnComet(){comets.push({x:Math.random()*W*.8,y:-10,vx:2+Math.random()*3,vy:3+Math.random()*3,life:1});}
+setInterval(spawnComet,2600);
+(function loop(){
+  cx.clearRect(0,0,W,H);
+  stars.forEach(s=>{
+    s.y+=s.vy;s.tw+=s.ts;
+    if(s.y>H+4){s.y=-4;s.x=Math.random()*W;}
+    const a=.35+Math.abs(Math.sin(s.tw))*.65;
+    cx.beginPath();cx.arc(s.x,s.y,s.r,0,7);
+    cx.fillStyle=`hsla(${s.hue},100%,75%,${a})`;
+    cx.shadowColor=`hsl(${s.hue},100%,70%)`;cx.shadowBlur=6;cx.fill();cx.shadowBlur=0;
+  });
+  comets=comets.filter(c=>c.life>0);
+  comets.forEach(c=>{
+    c.x+=c.vx;c.y+=c.vy;c.life-=.012;
+    const g=cx.createLinearGradient(c.x,c.y,c.x-c.vx*14,c.y-c.vy*14);
+    g.addColorStop(0,`rgba(255,255,255,${c.life})`);
+    g.addColorStop(1,'rgba(0,234,255,0)');
+    cx.strokeStyle=g;cx.lineWidth=2.4;cx.beginPath();
+    cx.moveTo(c.x,c.y);cx.lineTo(c.x-c.vx*14,c.y-c.vy*14);cx.stroke();
+  });
+  requestAnimationFrame(loop);
+})();
+
+/* КВАЗАРЫ + МАГНЕТАРЫ */
+const quasarColors=['#00eaff','#ff2d95','#a6ff00','#ff9e00','#b26bff'];
+for(let i=0;i<7;i++){
+  const q=document.createElement('div');q.className='quasar';
+  q.style.left=(5+Math.random()*90)+'vw';
+  q.style.top=(5+Math.random()*80)+'vh';
+  q.style.setProperty('--d',(5+Math.random()*7)+'s');
+  q.style.setProperty('--dl',(Math.random()*8)+'s');
+  q.style.setProperty('--qc',quasarColors[i%quasarColors.length]);
+  document.body.appendChild(q);
+}
+for(let i=0;i<12;i++){
+  const m=document.createElement('div');m.className='magnetar';
+  m.style.left=(3+Math.random()*94)+'vw';
+  m.style.top=(3+Math.random()*88)+'vh';
+  m.style.setProperty('--d',(1.5+Math.random()*3)+'s');
+  m.style.setProperty('--dl',(Math.random()*3)+'s');
+  document.body.appendChild(m);
+}
+
+/* ПОЯВЛЕНИЕ КАРТ */
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('shown');io.unobserve(e.target);}
+}),{threshold:.15});
+document.querySelectorAll('.card').forEach((c,i)=>{
+  c.style.animationDelay=(i*.15)+'s';io.observe(c);
+});
+
+/* 3D-НАКЛОН КАРТ */
+document.querySelectorAll('.card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const dx=(e.clientX-r.left)/r.width-.5, dy=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`perspective(700px) rotateY(${dx*14}deg) rotateX(${-dy*14}deg) translateY(-6px)`;
+  });
+  card.addEventListener('mouseleave',()=>card.style.transform='');
+});
+
+/* ВЗРЫВ ЧАСТИЦ */
+function burst(x,y,n=26){
+  for(let i=0;i<n;i++){
+    const p=document.createElement('div');p.className='burst';
+    const c=quasarColors[Math.floor(Math.random()*quasarColors.length)];
+    p.style.color=c;p.style.background=c;p.style.left=x+'px';p.style.top=y+'px';
+    document.body.appendChild(p);
+    const a=Math.random()*Math.PI*2,d=60+Math.random()*180;
+    p.animate([
+      {transform:'translate(0,0) scale(1)',opacity:1},
+      {transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px) scale(0)`,opacity:0}
+    ],{duration:700+Math.random()*600,easing:'cubic-bezier(.1,.8,.3,1)'}).onfinish=()=>p.remove();
+  }
+}
+document.getElementById('cta').addEventListener('click',e=>{
+  burst(e.clientX,e.clientY,60);
+  const b=e.currentTarget;
+  b.textContent='✔ ВЫЗОВ ПРИНЯТ! ЖДЁМ ТЕБЯ, ЧЕМПИОН 🏆';
+  b.style.animation='none';
+  setTimeout(()=>{b.textContent='ПРИНЯТЬ ВЫЗОВ 🎮';b.style.animation='';},3200);
+});
+
+document.addEventListener('click',e=>{
+  if(e.target.closest('.card,.cta'))return;
+  burst(e.clientX,e.clientY,12);
+});
+</script>
+</body>
+</html>
