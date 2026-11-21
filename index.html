@@ -2,575 +2,570 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚡ ДР Миши — ОТКРЫТЫЙ РАУНД · ВСЕ В ДЕЛЕ ⚡</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rubik:wght@400;600;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>⚡ ДР Тимы — Космический Раунд ⚡</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rubik:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --neon1:#00eaff;--neon2:#ff2d95;--neon3:#a6ff00;--neon4:#ff9e00;
-  --panel:rgba(8,5,20,.75);
+  --cyan:#00f0ff;
+  --pink:#ff0055;
+  --lime:#a6ff00;
+  --purple:#7b2bff;
+  --panel:rgba(10, 8, 20, 0.65);
 }
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{overflow-x:hidden}
-body{background:#020005;color:#fff;font-family:'Rubik',sans-serif;min-height:100vh;cursor:crosshair;user-select:none}
-#webgl{position:fixed;inset:0;z-index:0;pointer-events:none}
-#bhCanvas{position:fixed;left:50%;bottom:-30px;transform:translateX(-50%);z-index:1;pointer-events:none}
-.vignette{position:fixed;inset:0;z-index:2;pointer-events:none;
-  background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,.9) 100%)}
-body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:3;
-  background:repeating-linear-gradient(0deg,rgba(255,255,255,.015) 0 1px,transparent 1px 3px);mix-blend-mode:overlay}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  background:#000;
+  color:#fff;
+  font-family:'Rubik',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+  user-select:none;
+}
+canvas#space{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+}
+.vignette{
+  position:fixed;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.9) 100%);
+  box-shadow:inset 0 0 150px rgba(0,0,0,1);
+}
 
-/* ПУЛЬСАР */
-.pulsar{position:fixed;top:10%;right:5%;width:130px;height:130px;z-index:1;pointer-events:none}
-.pulsar .beam{position:absolute;top:50%;left:50%;width:58vw;height:10px;
-  background:linear-gradient(90deg,transparent,rgba(0,234,255,.95),rgba(255,255,255,1),rgba(0,234,255,.95),transparent);
-  transform-origin:left center;border-radius:50%;filter:blur(1.5px);animation:spinBeam 7s linear infinite}
-.pulsar .beam.b2{animation-delay:-3.5s;opacity:.6}
-.pulsar .core{position:absolute;inset:32px;border-radius:50%;
-  background:radial-gradient(circle,#fff 0%,#bdf4ff 35%,rgba(0,180,255,0) 72%);
-  box-shadow:0 0 40px #bdf4ff,0 0 120px rgba(0,200,255,1);animation:pulseCore 1.5s infinite ease-in-out}
-@keyframes spinBeam{to{transform:rotate(360deg)}}
-@keyframes pulseCore{50%{transform:scale(1.35)}}
+/* Упрощенный HUD для мобилок */
+.hud{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:10;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  padding:20px;
+  font-family:'Orbitron',sans-serif;
+  pointer-events:none;
+}
+.hud-left{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.hud .name{
+  font-size:10px;
+  letter-spacing:2px;
+  color:var(--cyan);
+  text-shadow:0 0 10px var(--cyan);
+}
+.hud .hp-bar{
+  width:140px;
+  height:8px;
+  border:1px solid rgba(0,240,255,0.5);
+  border-radius:4px;
+  background:rgba(0,0,0,0.8);
+  overflow:hidden;
+}
+.hud .hp-fill{
+  height:100%;
+  width:100%;
+  background:linear-gradient(90deg, var(--cyan), var(--lime));
+  box-shadow:0 0 15px var(--cyan);
+  transition:width 0.3s ease;
+}
+.hud-right{
+  text-align:right;
+  font-size:10px;
+  letter-spacing:2px;
+  color:#aaa;
+}
+.hud-right b{
+  color:var(--lime);
+  text-shadow:0 0 10px var(--lime);
+}
 
-/* КВАЗАРЫ + МАГНЕТАРЫ */
-.quasar{position:fixed;width:8px;height:8px;border-radius:50%;z-index:1;pointer-events:none;
-  background:#fff;box-shadow:0 0 30px #fff,0 0 90px var(--qc,#00eaff);
-  animation:quasarPop var(--d,6s) ease-in-out var(--dl,0s) infinite}
-@keyframes quasarPop{0%,88%{opacity:0;transform:scale(0)}90%{opacity:1;transform:scale(1)}
-  93%{opacity:.3;transform:scale(.3)}96%{opacity:1;transform:scale(2)}100%{opacity:0;transform:scale(3.5)}}
-.magnetar{position:fixed;width:14px;height:14px;border-radius:50%;pointer-events:none;z-index:1;
-  background:#ffe86e;box-shadow:0 0 30px #ffe86e,0 0 90px #ff9e00;animation:magTw var(--d,3s) infinite var(--dl,0s)}
-@keyframes magTw{50%{opacity:.1;transform:scale(.4)}}
+/* Основной контент */
+.wrap{
+  position:relative;
+  z-index:5;
+  max-width:800px;
+  margin:0 auto;
+  padding:80px 20px 100px;
+  text-align:center;
+}
+.tag{
+  display:inline-block;
+  padding:6px 16px;
+  border-radius:30px;
+  border:1px solid rgba(0,240,255,0.5);
+  background:rgba(0,240,255,0.1);
+  font-family:'Orbitron',sans-serif;
+  font-size:11px;
+  letter-spacing:3px;
+  color:var(--cyan);
+  box-shadow:0 0 20px rgba(0,240,255,0.3);
+  margin-bottom:20px;
+}
+h1{
+  font-family:'Orbitron',sans-serif;
+  font-weight:900;
+  font-size:clamp(32px, 8vw, 64px);
+  margin:0 0 10px;
+  letter-spacing:2px;
+  line-height:1.1;
+  background:linear-gradient(135deg, #fff, var(--cyan), var(--pink));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  filter:drop-shadow(0 0 20px rgba(0,240,255,0.4));
+}
+.subtitle{
+  font-family:'Orbitron',sans-serif;
+  font-size:clamp(11px, 2.5vw, 14px);
+  letter-spacing:4px;
+  color:#b0a8d0;
+  margin-bottom:30px;
+}
+.invite-line{
+  font-size:clamp(14px, 2.8vw, 18px);
+  line-height:1.6;
+  color:#e0d8f0;
+  max-width:600px;
+  margin:0 auto 40px;
+  background:rgba(0,0,0,0.3);
+  padding:15px;
+  border-radius:15px;
+  backdrop-filter:blur(5px);
+}
+.invite-line b{
+  color:var(--lime);
+  text-shadow:0 0 10px rgba(166,255,0,0.5);
+}
 
-/* RIVALS: МОЛНИЯ */
-.lightning{position:fixed;z-index:5;pointer-events:none;filter:drop-shadow(0 0 15px #7df3ff) drop-shadow(0 0 40px rgba(0,234,255,.9))}
-.lightning path{fill:none;stroke:#eaffff;stroke-width:4;stroke-linecap:round}
+/* Карточки */
+.cards{
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+  margin-bottom:40px;
+}
+.card{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:20px;
+  padding:20px;
+  background:var(--panel);
+  border:1px solid rgba(0,240,255,0.15);
+  border-radius:20px;
+  backdrop-filter:blur(12px);
+  box-shadow:0 10px 30px rgba(0,0,0,0.5);
+  text-align:left;
+  text-decoration:none;
+  color:#fff;
+  transition:transform 0.2s, border-color 0.2s;
+}
+.card:active{
+  transform:scale(0.98);
+}
+.card:not(.place):hover{
+  border-color:var(--cyan);
+}
+.card.place{
+  cursor:pointer;
+  border-color:rgba(255,0,85,0.4);
+  box-shadow:0 0 25px rgba(255,0,85,0.15);
+}
+.card.place:hover{
+  border-color:var(--pink);
+  box-shadow:0 0 35px rgba(255,0,85,0.4);
+}
+.card .icon{
+  font-size:32px;
+  min-width:50px;
+  text-align:center;
+  filter:drop-shadow(0 0 10px rgba(255,255,255,0.3));
+}
+.card .content{
+  flex:1;
+}
+.card .label{
+  font-family:'Orbitron',sans-serif;
+  font-size:9px;
+  letter-spacing:2px;
+  color:var(--cyan);
+  margin-bottom:4px;
+}
+.card .value{
+  font-size:16px;
+  font-weight:800;
+}
+.card .value small{
+  display:block;
+  font-size:12px;
+  color:#9b93c9;
+  font-weight:400;
+  margin-top:2px;
+}
+.card.place .value{ color:var(--pink); }
 
-/* RIVALS: ХИТМАРКЕР */
-.hitmarker{position:fixed;width:56px;height:56px;z-index:55;pointer-events:none;
-  transform:translate(-50%,-50%) rotate(45deg);animation:hitPop .45s ease-out forwards}
-.hitmarker i{position:absolute;background:#fff;box-shadow:0 0 15px #fff,0 0 30px var(--neon2)}
-.hitmarker i:nth-child(1){left:0;top:0;width:20px;height:5px}
-.hitmarker i:nth-child(2){right:0;top:0;width:5px;height:20px}
-.hitmarker i:nth-child(3){left:0;bottom:0;width:5px;height:20px}
-.hitmarker i:nth-child(4){right:0;bottom:0;width:20px;height:5px}
-.hitmarker.red i{background:#ff3355;box-shadow:0 0 15px #ff3355,0 0 35px #ff3355}
-@keyframes hitPop{0%{transform:translate(-50%,-50%) rotate(45deg) scale(.4);opacity:1}
-  60%{transform:translate(-50%,-50%) rotate(45deg) scale(1.2);opacity:1}
-  100%{transform:translate(-50%,-50%) rotate(45deg) scale(.8);opacity:0}}
+/* CTA кнопка */
+.cta{
+  display:inline-block;
+  font-family:'Orbitron',sans-serif;
+  font-weight:700;
+  font-size:16px;
+  letter-spacing:2px;
+  padding:18px 40px;
+  border-radius:15px;
+  color:#fff;
+  background:linear-gradient(135deg, #ff0055, #7b2bff);
+  border:none;
+  cursor:pointer;
+  box-shadow:0 0 30px rgba(255,0,85,0.5);
+  transition:transform 0.2s, box-shadow 0.2s;
+}
+.cta:active{
+  transform:scale(0.95);
+  box-shadow:0 0 50px rgba(255,0,85,0.8);
+}
+.footer{
+  margin-top:40px;
+  font-size:10px;
+  color:#666;
+  letter-spacing:2px;
+  font-family:'Orbitron',sans-serif;
+}
 
-/* RIVALS: УРОН */
-.dmg{position:fixed;z-index:55;pointer-events:none;font-family:'Orbitron';font-weight:900;font-size:32px;
-  color:#ffdd33;text-shadow:0 0 18px #ff9e00,0 0 44px #ff2d95;animation:dmgFloat 1s ease-out forwards;transform:translate(-50%,-50%)}
-.dmg.crit{color:#ff3355;font-size:48px;text-shadow:0 0 20px #ff3355,0 0 60px #ff2d95}
-@keyframes dmgFloat{0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}
-  15%{opacity:1;transform:translate(-50%,-60%) scale(1.3)}
-  100%{opacity:0;transform:translate(-50%,-200%) scale(1)}}
+/* Всплывающее окно */
+.toast{
+  position:fixed;
+  bottom:30px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:rgba(255,0,85,0.9);
+  color:#fff;
+  padding:15px 30px;
+  border-radius:30px;
+  font-family:'Orbitron',sans-serif;
+  font-size:14px;
+  letter-spacing:1px;
+  opacity:0;
+  pointer-events:none;
+  transition:all 0.3s;
+  box-shadow:0 0 30px rgba(255,0,85,0.5);
+  white-space:nowrap;
+}
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
 
-/* RIVALS: HUD */
-.hud{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;justify-content:space-between;align-items:center;
-  padding:14px 24px;font-family:'Orbitron';pointer-events:none}
-.hud .hp{width:min(340px,38vw)}
-.hud .hp .name{font-size:13px;letter-spacing:4px;color:var(--neon1);text-shadow:0 0 14px var(--neon1);margin-bottom:6px}
-.hud .bar{height:18px;border:1px solid rgba(0,234,255,.7);border-radius:9px;background:rgba(0,0,0,.6);overflow:hidden}
-.hud .bar .fill{height:100%;width:100%;border-radius:8px;background:linear-gradient(90deg,#00eaff,#a6ff00);
-  box-shadow:0 0 25px rgba(0,234,255,1);transition:width .5s cubic-bezier(.2,.9,.2,1.2)}
-.hud .timer{font-size:clamp(20px,3.4vw,32px);font-weight:900;letter-spacing:5px;color:#fff;
-  text-shadow:0 0 22px var(--neon2),0 0 60px var(--neon2)}
-.hud .round{font-size:12px;letter-spacing:4px;color:#b7aee6;text-align:right}
-.hud .round b{color:var(--neon3);text-shadow:0 0 14px var(--neon3)}
-
-/* RIVALS: TOAST */
-.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-30px) scale(.7);
-  z-index:56;font-family:'Orbitron';font-weight:900;letter-spacing:3px;text-align:center;
-  padding:18px 44px;border-radius:14px;opacity:0;pointer-events:none;
-  background:linear-gradient(120deg,rgba(255,45,149,.25),rgba(123,43,255,.25));
-  border:1px solid var(--neon2);box-shadow:0 0 50px rgba(255,45,149,.7), inset 0 0 35px rgba(255,45,149,.2);
-  text-shadow:0 0 20px var(--neon2);animation:toastIn 2.6s cubic-bezier(.2,1.4,.3,1) forwards}
-.toast .big{font-size:clamp(20px,3.8vw,34px);color:#fff}
-.toast .sub{font-size:13px;color:var(--neon1);letter-spacing:5px;margin-top:5px}
-@keyframes toastIn{0%{opacity:0;transform:translateX(-50%) translateY(-30px) scale(.7)}
-  12%{opacity:1;transform:translateX(-50%) translateY(0) scale(1.05)}
-  18%{transform:translateX(-50%) translateY(0) scale(1)}
-  80%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-20px) scale(.95)}}
-
-/* КОНТЕНТ */
-.wrap{position:relative;z-index:10;max-width:980px;margin:0 auto;padding:130px 24px 260px;text-align:center}
-.tag{display:inline-block;padding:9px 26px;border-radius:999px;border:1px solid rgba(0,234,255,.6);
-  background:rgba(0,234,255,.08);font-family:'Orbitron';font-size:14px;letter-spacing:5px;color:var(--neon1);
-  box-shadow:0 0 35px rgba(0,234,255,.4), inset 0 0 25px rgba(0,234,255,.2);animation:tagFlick 5s infinite}
-@keyframes tagFlick{92%{opacity:1}93%{opacity:.3}94%{opacity:1}96%{opacity:.5}97%{opacity:1}}
-h1{font-family:'Orbitron';font-weight:900;font-size:clamp(44px,9vw,104px);margin:30px 0 10px;letter-spacing:3px;line-height:1.05;
-  background:linear-gradient(90deg,#00eaff,#fff,#ff2d95,#a6ff00,#00eaff);background-size:300% 100%;
-  -webkit-background-clip:text;background-clip:text;color:transparent;animation:gradShift 6s linear infinite;
-  filter:drop-shadow(0 0 35px rgba(0,234,255,.8))}
-@keyframes gradShift{to{background-position:300% 0}}
-.glitch{position:relative;display:inline-block}
-.glitch::before,.glitch::after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;-webkit-background-clip:text;background-clip:text}
-.glitch::before{color:#0ff;transform:translate(-4px,-3px);clip-path:inset(0 0 55% 0);animation:gl1 2.4s infinite steps(2);opacity:.9}
-.glitch::after{color:#f0f;transform:translate(4px,3px);clip-path:inset(55% 0 0 0);animation:gl2 2.1s infinite steps(2);opacity:.9}
-@keyframes gl1{0%,88%,100%{clip-path:inset(0 0 100% 0)}90%{clip-path:inset(0 0 55% 0)}94%{clip-path:inset(30% 0 30% 0)}}
-@keyframes gl2{0%,88%,100%{clip-path:inset(100% 0 0 0)}91%{clip-path:inset(55% 0 0 0)}95%{clip-path:inset(10% 0 60% 0)}}
-.subtitle{font-family:'Orbitron';font-size:clamp(14px,2.6vw,20px);letter-spacing:7px;color:#d0c0ff;margin-bottom:16px;text-shadow:0 0 25px rgba(178,60,255,1)}
-.invite-line{font-size:clamp(17px,2.8vw,22px);color:#f0eaff;max-width:680px;margin:0 auto 56px;line-height:1.65}
-.invite-line b{color:var(--neon3);text-shadow:0 0 18px var(--neon3)}
-.invite-line .you{color:var(--neon2);text-shadow:0 0 20px var(--neon2);font-weight:800}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:26px;margin-top:24px}
-.card{position:relative;border-radius:26px;padding:34px 24px;background:var(--panel);border:1px solid rgba(0,234,255,.3);
-  backdrop-filter:blur(14px);box-shadow:0 0 40px rgba(0,0,0,.7);opacity:0;transform:translateY(50px) rotateX(20deg);
-  transition:transform .3s ease;transform-style:preserve-3d;cursor:default}
-.card.shown{animation:cardIn 1s cubic-bezier(.2,.9,.3,1.2) forwards}
-@keyframes cardIn{to{opacity:1;transform:translateY(0) rotateX(0)}}
-.card:hover{border-color:var(--nc,#00eaff);box-shadow:0 0 60px var(--nc,#00eaff), inset 0 0 40px rgba(255,255,255,.06)}
-.card .icon{font-size:56px;margin-bottom:16px;display:inline-block;animation:iconFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 22px var(--nc,#00eaff))}
-@keyframes iconFloat{50%{transform:translateY(-14px) rotate(5deg)}}
-.card .label{font-family:'Orbitron';font-size:12px;letter-spacing:5px;color:var(--nc,#00eaff);margin-bottom:12px}
-.card .value{font-size:clamp(18px,3vw,26px);font-weight:800}
-.card .value small{display:block;font-size:14px;color:#a89fdd;margin-top:8px;font-weight:400}
-.card.place{cursor:pointer;text-decoration:none;color:#fff;display:block;overflow:hidden}
-.card.place::after{content:"";position:absolute;top:-60%;left:-80%;width:60%;height:220%;
-  background:linear-gradient(105deg,transparent,rgba(255,255,255,.3),transparent);transform:rotate(20deg);animation:shine 3.4s infinite}
-@keyframes shine{55%,100%{left:140%}}
-.card.place .go{margin-top:14px;font-family:'Orbitron';font-size:13px;letter-spacing:4px;color:var(--neon3);animation:blink 1.2s infinite}
-@keyframes blink{50%{opacity:.3}}
-.cta{margin-top:66px;display:inline-block;position:relative;font-family:'Orbitron';font-weight:700;
-  font-size:clamp(17px,3.2vw,24px);letter-spacing:4px;padding:24px 64px;border-radius:18px;color:#fff;
-  background:linear-gradient(120deg,#7b2bff,#ff2d95,#ff9e00);background-size:250% 100%;border:none;cursor:pointer;
-  animation:ctaGrad 4s linear infinite;box-shadow:0 0 60px rgba(255,45,149,.8),0 14px 50px rgba(0,0,0,.7);
-  transition:transform .2s;overflow:hidden}
-@keyframes ctaGrad{to{background-position:250% 0}}
-.cta:hover{transform:scale(1.1) rotate(-1.5deg)}
-.cta:active{transform:scale(.94)}
-.burst{position:fixed;width:10px;height:10px;border-radius:50%;pointer-events:none;z-index:60;box-shadow:0 0 20px currentColor;background:currentColor}
-.trail{position:fixed;width:18px;height:18px;border-radius:50%;pointer-events:none;z-index:54;
-  background:radial-gradient(circle,rgba(255,255,255,1),rgba(0,234,255,.5) 55%,transparent 75%);
-  transform:translate(-50%,-50%);animation:trailFade .6s ease-out forwards}
-@keyframes trailFade{to{transform:translate(-50%,-50%) scale(.1);opacity:0}}
-.footer{margin-top:80px;font-size:14px;color:#8a80c0;letter-spacing:3px;font-family:'Orbitron'}
-.footer b{color:var(--neon2);text-shadow:0 0 18px var(--neon2)}
-@media (max-width:560px){.pulsar{width:90px;height:90px}.pulsar .core{inset:26px}}
+/* Мобильная адаптация HUD */
+@media (min-width: 600px){
+  .hud .name{ font-size:12px; }
+  .hud .hp-bar{ width:200px; height:10px; }
+  .hud-right{ font-size:12px; }
+  .cards{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .card{ padding:25px; }
+}
 </style>
 </head>
 <body>
 
-<!-- WebGL туманность (глубокий космос) -->
-<canvas id="webgl"></canvas>
-
-<!-- Чёрная дыра -->
-<canvas id="bhCanvas"></canvas>
-
+<!-- WebGL Космос (Реалистичная графика) -->
+<canvas id="space"></canvas>
 <div class="vignette"></div>
 
+<!-- HUD -->
 <div class="hud">
-  <div class="hp">
-    <div class="name">ГИЛЬДИЯ ДРУЗЕЙ · FULL SQUAD</div>
-    <div class="bar"><div class="fill" id="hpFill"></div></div>
+  <div class="hud-left">
+    <div class="name">SQUAD: FRIENDS & CLASS</div>
+    <div class="hp-bar"><div class="hp-fill" id="hpFill"></div></div>
   </div>
-  <div class="timer" id="timer">00:00:00</div>
-  <div class="round">РАУНД <b>1</b> · МОД: <b>ОТКРЫТЫЙ</b></div>
-</div>
-
-<div class="pulsar">
-  <div class="beam"></div><div class="beam b2"></div><div class="core"></div>
+  <div class="hud-right">
+    РАУНД 1 · МОД:<br><b>ОТКРЫТЫЙ</b>
+  </div>
 </div>
 
 <div class="wrap">
-  <span class="tag">⚡ RIVALS · ОТКРЫТЫЙ РАУНД · ВСЕ В ДЕЛЕ ⚡</span>
-  <h1><span class="glitch" data-text="ДРУЗЬЯ!">ДРУЗЬЯ!</span></h1>
-  <div class="subtitle">ДЕНЬ РОЖДЕНИЯ МИШИ · ЗВЁЗДНЫЙ РАУНД</div>
+  <div class="tag">⚡ RIVALS · ВСЕ В ДЕЛЕ ⚡</div>
+  
+  <h1>ТИМА, С ДНЁМ РОЖДЕНИЯ!</h1>
+  <div class="subtitle">КОСМИЧЕСКИЙ РАУНД · 2026</div>
+  
   <div class="invite-line">
-    Это приглашение для <span class="you">КАЖДОГО</span>! Друзья, бро, класс, гильдия —
-    кого ждём? <b>ВСЕХ!</b> Без исключений: whoever you are — заходи в лобби,
-    раунд начинается в <b>субботу</b>. No one gets left behind! 🚀
+    Это приглашение для <b>КАЖДОГО</b>! Друзья, бро, класс, гильдия — кого ждём? <b>ВСЕХ!</b> Без исключений: whoever you are — заходи в лобби. No one gets left behind! 🚀
   </div>
 
   <div class="cards">
-    <div class="card" style="--nc:#00eaff">
+    <div class="card">
       <div class="icon">📅</div>
-      <div class="label">ДАТА</div>
-      <div class="value">28 НОЯБРЯ 2026
-        <small>СУББОТА · свободный вход для всех</small>
+      <div class="content">
+        <div class="label">ДАТА ПРАЗДНИКА</div>
+        <div class="value">28 НОЯБРЯ 2026<small>Суббота · Свободный вход</small></div>
       </div>
     </div>
-    <div class="card" style="--nc:#a6ff00">
+    
+    <div class="card">
       <div class="icon">⏱️</div>
-      <div class="label">ВРЕМЯ РАУНДА</div>
-      <div class="value">12:00 — 13:00
-        <small>60 минут космоса на всю толпу</small>
+      <div class="content">
+        <div class="label">ВРЕМЯ</div>
+        <div class="value">12:00 — 13:00<small>60 минут космоса</small></div>
       </div>
     </div>
-    <a class="card place" style="--nc:#ff2d95" href="https://yandex.ru/maps/?text=батутный центр Небо Московский 1-й микрорайон 57" target="_blank" rel="noopener">
+
+    <a class="card place" href="https://yandex.ru/maps/?text=батутный центр Небо Московский 1-й микрорайон 57" target="_blank" rel="noopener">
       <div class="icon">🚀</div>
-      <div class="label">АРЕНА · ЖМИ!</div>
-      <div class="value">Батутный центр «НЕБО»
-        <small>г. Московский, 1-й микрорайон, 57</small>
+      <div class="content">
+        <div class="label">ЛОКАЦИЯ (ЖМИ)</div>
+        <div class="value">БАТУТНЫЙ ЦЕНТР «НЕБО»<small>г. Московский, 1-й мкр-н, 57</small></div>
       </div>
-      <div class="go">▶ ОТКРЫТЬ НА КАРТЕ</div>
     </a>
-    <div class="card" style="--nc:#ff9e00">
+
+    <div class="card">
       <div class="icon">🫵</div>
-      <div class="label">КОГО ЖДЁМ</div>
-      <div class="value">АБСОЛЮТНО ВСЕХ!
-        <small>+1, друзья друзей — welcome to the lobby</small>
+      <div class="content">
+        <div class="label">СПИСОК ГОСТЕЙ</div>
+        <div class="value">АБСОЛЮТНО ВСЕ<small>+1 и друзья друзей welcome</small></div>
       </div>
     </div>
   </div>
 
-  <button class="cta" id="cta">ВСТУПИТЬ В ЛОББИ 🎮</button>
-
-  <div class="footer">MISSION: <b>FUN</b> · LOOT: ВЕСЕЛЬЕ · STATUS: <b>ALL INVITED</b></div>
+  <button class="cta" id="cta">ВСТУПИТЬ В ЛОББИ</button>
+  
+  <div class="footer">MISSION: FUN · LOOT: MEMORIES</div>
 </div>
 
+<div class="toast" id="toast">🎮 ЛОББИ ОТКРЫТО! ЖДЁМ ТЕБЯ</div>
+
 <script>
-/* ========== WEBGL ГЛУБОКИЙ КОСМОС ========== */
-const canvas = document.getElementById('webgl');
-const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-let program, startTime = performance.now();
-let mouse = { x: 0, y: 0 };
+/* =========================================
+   РЕАЛИСТИЧНАЯ ЧЁРНАЯ ДЫРА (WebGL Raymarching)
+   ========================================= */
+const canvas = document.getElementById('space');
+const gl = canvas.getContext('webgl');
 
-function resize() {
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
-  gl.viewport(0, 0, canvas.width, canvas.height);
-}
-
+// Шейдеры для реалистичного космоса
 const vsSource = `
-attribute vec2 position;
-void main() { gl_Position = vec4(position, 0.0, 1.0); }
+  attribute vec2 a_position;
+  void main() {
+    gl_Position = vec4(a_position, 0.0, 1.0);
+  }
 `;
 
+// Фрагментный шейдер: черная дыра с линзированием и аккреционным диском
 const fsSource = `
-precision highp float;
-uniform float time;
-uniform vec2 resolution;
-uniform vec2 mouse;
+  precision highp float;
+  uniform vec2 u_resolution;
+  uniform float u_time;
+  uniform vec2 u_mouse;
 
-vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
-
-float snoise(vec2 v) {
-  const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
-  vec2 i  = floor(v + dot(v, C.yy));
-  vec2 x0 = v - i + dot(i, C.xx);
-  vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-  vec4 x12 = x0.xyxy + C.xxzz;
-  x12.xy -= i1;
-  i = mod289(i);
-  vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
-  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
-  m = m*m; m = m*m;
-  vec3 x = 2.0 * fract(p * C.www) - 1.0;
-  vec3 h = abs(x) - 0.5;
-  vec3 ox = floor(x + 0.5);
-  vec3 a0 = x - ox;
-  m *= 1.79284291400159 - 0.85373472095314 * (a0*a0 + h*h);
-  vec3 g;
-  g.x  = a0.x  * x0.x  + h.x  * x0.y;
-  g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-  return 130.0 * dot(m, g);
-}
-
-float fbm(vec2 p) {
-  float f = 0.0;
-  f += 0.5000 * snoise(p); p *= 2.01;
-  f += 0.2500 * snoise(p); p *= 2.03;
-  f += 0.1250 * snoise(p); p *= 2.02;
-  f += 0.0625 * snoise(p);
-  return f;
-}
-
-void main() {
-  vec2 uv = gl_FragCoord.xy / resolution;
-  vec2 p = (gl_FragCoord.xy * 2.0 - resolution) / min(resolution.x, resolution.y);
-  float t = time * 0.03;
-
-  // звездное небо
-  float stars = pow(snoise(p * 180.0 + t * 2.0), 40.0);
-  stars += pow(snoise(p * 120.0 - t * 3.0), 60.0) * 0.5;
-
-  // туманность
-  vec3 col = vec3(0.0);
-  for (int i = 0; i < 8; i++) {
-    float fi = float(i);
-    vec2 q = p * (1.0 + fi * 0.4) + vec2(t * (0.2 + fi * 0.1), -t * (0.3 - fi * 0.05));
-    float n = fbm(q * 1.8 + fbm(q * 3.0 + t));
-    float glow = smoothstep(0.2, 0.9, n) * (0.4 - fi * 0.04);
-    vec3 hue = 0.5 + 0.5 * cos(6.28318 * (vec3(0.0, 0.33, 0.67) + fi * 0.12 + t * 0.1));
-    col += hue * glow;
+  // Функция шума для звезд и газа
+  float hash(vec2 p) {
+    p = fract(p * vec2(123.34, 456.21));
+    p += dot(p, p + 45.32);
+    return fract(p.x * p.y);
   }
 
-  // ядро (центральное свечение)
-  float d = length(p);
-  col += vec3(0.9, 0.3, 0.8) * exp(-d * 3.0) * 0.7;
-  col += vec3(0.1, 0.5, 1.0) * exp(-d * 1.5) * 0.3;
+  float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    f = f * f * (3.0 - 2.0 * f);
+    float a = hash(i);
+    float b = hash(i + vec2(1.0, 0.0));
+    float c = hash(i + vec2(0.0, 1.0));
+    float d = hash(i + vec2(1.0, 1.0));
+    return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+  }
 
-  // звезды
-  col += vec3(1.0) * stars;
+  // FBM для туманности
+  float fbm(vec2 p) {
+    float v = 0.0;
+    float a = 0.5;
+    mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.5));
+    for (int i = 0; i < 5; i++) {
+      v += a * noise(p);
+      p = rot * p * 2.0;
+      a *= 0.5;
+    }
+    return v;
+  }
 
-  // затемнение по краям
-  col *= smoothstep(2.0, 0.3, d);
+  void main() {
+    // Нормализуем координаты
+    vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.y, u_resolution.x);
+    
+    // Параллакс от мыши (двигаем камеру)
+    uv += u_mouse * 0.05;
 
-  // немного "черной дыры" внизу
-  vec2 bhPos = vec2(0.0, -0.8);
-  float bhDist = length(p - bhPos);
-  col += vec3(1.0, 0.5, 0.0) * exp(-bhDist * 8.0) * 0.5;
-  col *= smoothstep(0.1, 0.35, bhDist);
+    // Центр черной дыры (снизу по центру)
+    vec2 bh_pos = vec2(0.0, -0.6);
+    float dist = length(uv - bh_pos);
 
-  gl_FragColor = vec4(col, 1.0);
-}
+    // 1. ФОН: Глубокий космос и звезды
+    vec3 bg = vec3(0.01, 0.005, 0.02);
+    
+    // Звездная пыль
+    float star_noise = noise(uv * 100.0 + u_time * 0.1);
+    float stars = smoothstep(0.95, 1.0, star_noise) * 1.5;
+    // Добавляем цвета звездам
+    vec3 star_color = mix(vec3(0.5, 0.8, 1.0), vec3(1.0, 0.8, 0.5), hash(uv*10.0));
+    bg += stars * star_color;
+
+    // Туманность (медленно вращается)
+    vec2 q = uv * 2.0 + vec2(u_time * 0.02, u_time * -0.01);
+    float nebula = fbm(q + fbm(q * 1.5));
+    vec3 nebula_color = mix(vec3(0.3, 0.0, 0.4), vec3(0.0, 0.1, 0.3), nebula);
+    bg += nebula * nebula_color * 0.6;
+
+    // 2. ЧЕРНАЯ ДЫРА (Аккреционный диск и линзирование)
+    
+    // Горизонт событий (тень)
+    float event_horizon = smoothstep(0.12, 0.1, dist);
+    vec3 final_color = bg * (1.0 - event_horizon); // Внутри дыры чернота
+
+    // Аккреционный диск (сплюснутый эллипс вокруг дыры)
+    // Вращаем угол со временем
+    float angle = atan(uv.y - bh_pos.y, uv.x - bh_pos.x);
+    float spin = angle - u_time * 0.5;
+    
+    // Создаем эллиптическое расстояние для диска
+    vec2 disc_uv = uv - bh_pos;
+    disc_uv.y /= 0.15; // Сплющиваем диск
+    float disc_dist = length(disc_uv);
+    
+    // Кольцо диска (от 0.15 до 0.35)
+    float disc_ring = smoothstep(0.13, 0.15, disc_dist) * smoothstep(0.4, 0.2, disc_dist);
+    
+    // Текстура газа в диске
+    float gas = fbm(vec2(spin * 2.0, disc_dist * 10.0) - u_time * 0.5);
+    gas = mix(0.5, 1.0, gas);
+
+    // Эффект Доплера (ярче там, где газ летит на нас)
+    float doppler = 0.5 + 0.5 * sin(angle); // Левая сторона ярче
+    
+    // Цвет диска (раскаленный газ: от белого к оранжевому и красному)
+    vec3 disc_color = mix(vec3(1.0, 0.2, 0.0), vec3(1.0, 0.9, 0.5), doppler);
+    disc_color = mix(disc_color, vec3(1.0), pow(doppler, 4.0) * 0.5); // Перегрев (белые вспышки)
+
+    // Накладываем диск
+    final_color += disc_color * disc_ring * gas * doppler * 2.0;
+
+    // 3. Линзирование (Эффект гравитационной линзы)
+    // Свет от диска огибает дыру и появляется сверху/снизу
+    // Мы симулируем это кольцом фотонов (Photon Ring) — тонкое яркое свечение вокруг тени
+    float photon_ring = smoothstep(0.11, 0.09, dist) * smoothstep(0.08, 0.1, dist);
+    final_color += vec3(1.0, 0.8, 0.6) * photon_ring * 1.5;
+
+    // 4. Внешнее свечение (Гало)
+    float glow = smoothstep(0.8, 0.0, dist) * 0.4;
+    final_color += vec3(0.5, 0.1, 0.3) * glow;
+
+    // Вывод
+    gl_FragColor = vec4(final_color, 1.0);
+  }
 `;
 
+// Компиляция шейдеров
 function createShader(gl, type, source) {
   const shader = gl.createShader(type);
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.error(gl.getShaderInfoLog(shader));
-    gl.deleteShader(shader);
-    return null;
+    console.error('Shader compile error:', gl.getShaderInfoLog(shader));
   }
   return shader;
 }
 
 function createProgram(gl, vsSource, fsSource) {
-  const vs = createShader(gl, gl.VERTEX_SHADER, vsSource);
-  const fs = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
   const program = gl.createProgram();
-  gl.attachShader(program, vs);
-  gl.attachShader(program, fs);
+  gl.attachShader(program, createShader(gl, gl.VERTEX_SHADER, vsSource));
+  gl.attachShader(program, createShader(gl, gl.FRAGMENT_SHADER, fsSource));
   gl.linkProgram(program);
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    console.error(gl.getProgramInfoLog(program));
-    return null;
+    console.error('Program link error:', gl.getProgramInfoLog(program));
   }
   return program;
 }
 
-function init() {
-  const vertexShader = createShader(gl, gl.VERTEX_SHADER, vsSource);
-  const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
-  program = gl.createProgram();
-  gl.attachShader(program, vertexShader);
-  gl.attachShader(program, fragmentShader);
-  gl.linkProgram(program);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    console.error('Program link error:', gl.getProgramInfoLog(program));
-    return;
-  }
-  gl.useProgram(program);
+// Инициализация WebGL
+const program = createProgram(gl, vsSource, fsSource);
+gl.useProgram(program);
 
-  const positionLocation = gl.getAttribLocation(program, 'position');
-  const buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-  gl.enableVertexAttribArray(positionLocation);
-  gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+// Буфер
+const buffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+const posLoc = gl.getAttribLocation(program, 'a_position');
+gl.enableVertexAttribArray(posLoc);
+gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
 
-  program.timeUniform = gl.getUniformLocation(program, 'time');
-  program.resolutionUniform = gl.getUniformLocation(program, 'resolution');
-  program.mouseUniform = gl.getUniformLocation(program, 'mouse');
+// Локации юниформ
+const resLoc = gl.getUniformLocation(program, 'u_resolution');
+const timeLoc = gl.getUniformLocation(program, 'u_time');
+const mouseLoc = gl.getUniformLocation(program, 'u_mouse');
 
-  resize();
-  render();
+let mouse = {x: 0, y: 0};
+let startTime = performance.now();
+
+// Ресайз
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  gl.viewport(0, 0, canvas.width, canvas.height);
+  gl.uniform2f(resLoc, canvas.width, canvas.height);
 }
+window.addEventListener('resize', resize);
+resize();
 
+// Анимация
 function render() {
-  const time = (performance.now() - startTime) * 0.001;
-  gl.uniform1f(program.timeUniform, time);
-  gl.uniform2f(program.resolutionUniform, canvas.width, canvas.height);
-  gl.uniform2f(program.mouseUniform, mouse.x, mouse.y);
+  let time = (performance.now() - startTime) * 0.001;
+  gl.uniform1f(timeLoc, time);
+  gl.uniform2f(mouseLoc, mouse.x, mouse.y);
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   requestAnimationFrame(render);
 }
+requestAnimationFrame(render);
 
-addEventListener('resize', resize);
-addEventListener('mousemove', (e) => {
-  mouse.x = (e.clientX / innerWidth) * 2 - 1;
-  mouse.y = (e.clientY / innerHeight) * 2 - 1;
+// Отслеживание мыши для параллакса
+window.addEventListener('mousemove', (e) => {
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = (e.clientY / window.innerHeight) * 2 - 1;
 });
 
-if (gl) init();
-else {
-  // fallback — градиент
-  document.body.style.background = 'radial-gradient(circle at 50% 30%, #1a0030, #020005)';
-}
-
-/* ========== ЧЁРНАЯ ДЫРА С ЭФФЕКТОМ ДОППЛЕРА ========== */
-const bh = document.getElementById('bhCanvas');
-const bx = bh.getContext('2d');
-function sizeBH() {
-  bh.width = Math.min(innerWidth, 680);
-  bh.height = 420;
-}
-function drawBH(t) {
-  const W2 = bh.width, H2 = bh.height, cxp = W2 / 2, cyp = H2 * 0.55;
-  bx.clearRect(0, 0, W2, H2);
-  bx.save();
-  bx.translate(cxp, cyp);
-  bx.rotate(-0.16);
-  bx.globalCompositeOperation = 'lighter';
-  for (let i = 0; i < 140; i++) {
-    const a = t * 0.22 + i * 0.71;
-    const rad = 90 + (i % 38) / 38 * 110 + Math.sin(i * 13.7) * 10;
-    const x = Math.cos(a) * rad, y = Math.sin(a) * rad * 0.30;
-    const doppler = (Math.cos(a + Math.PI / 2) + 1) / 2;
-    const heat = (1 - (rad - 90) / 110);
-    const R = 22 + doppler * 32, alpha = 0.05 + doppler * 0.11 + heat * 0.04;
-    const hue = 30 + heat * 24 - doppler * 8;
-    const g = bx.createRadialGradient(x, y, 0, x, y, R);
-    g.addColorStop(0, `hsla(${hue},100%,${60 + doppler * 35}%,${alpha})`);
-    g.addColorStop(1, `hsla(30,100%,50%,0)`);
-    bx.fillStyle = g;
-    bx.beginPath();
-    bx.arc(x, y, R, 0, 7);
-    bx.fill();
-  }
-  bx.globalCompositeOperation = 'source-over';
-  bx.save();
-  bx.shadowColor = '#fff';
-  bx.shadowBlur = 35;
-  bx.strokeStyle = 'rgba(255,250,235,1)';
-  bx.lineWidth = 2.8;
-  bx.beginPath();
-  bx.ellipse(0, 0, 76, 76 * 0.96, 0, 0, 7);
-  bx.stroke();
-  bx.restore();
-  const sg = bx.createRadialGradient(0, 0, 52, 0, 0, 80);
-  sg.addColorStop(0, '#000');
-  sg.addColorStop(0.86, '#000');
-  sg.addColorStop(1, 'rgba(0,0,0,0)');
-  bx.fillStyle = sg;
-  bx.beginPath();
-  bx.arc(0, 0, 80, 0, 7);
-  bx.fill();
-  bx.globalCompositeOperation = 'lighter';
-  const lg = bx.createLinearGradient(-75, -56, 75, -56);
-  lg.addColorStop(0, 'rgba(255,180,80,.6)');
-  lg.addColorStop(0.5, 'rgba(255,235,195,.8)');
-  lg.addColorStop(1, 'rgba(255,150,60,.45)');
-  bx.strokeStyle = lg;
-  bx.lineWidth = 9;
-  bx.lineCap = 'round';
-  bx.beginPath();
-  bx.ellipse(0, 0, 75, 22, 0, Math.PI * 1.06, Math.PI * 1.94);
-  bx.stroke();
-  bx.restore();
-  const og = bx.createRadialGradient(cxp, cyp, 70, cxp, cyp, 280);
-  og.addColorStop(0, 'rgba(255,140,50,.18)');
-  og.addColorStop(0.5, 'rgba(150,40,180,.1)');
-  og.addColorStop(1, 'rgba(0,0,0,0)');
-  bx.globalCompositeOperation = 'screen';
-  bx.fillStyle = og;
-  bx.beginPath();
-  bx.arc(cxp, cyp, 280, 0, 7);
-  bx.fill();
-  bx.globalCompositeOperation = 'source-over';
-}
-
-let bhTime = 0;
-function animateBH() {
-  bhTime += 0.016;
-  drawBH(bhTime);
-  requestAnimationFrame(animateBH);
-}
-sizeBH();
-animateBH();
-addEventListener('resize', sizeBH);
-
-/* ========== HUD ТАЙМЕР ========== */
-const timerEl = document.getElementById('timer');
-let seconds = 0;
-setInterval(() => {
-  seconds++;
-  const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
-  const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
-  const s = String(seconds % 60).padStart(2, '0');
-  timerEl.textContent = `${h}:${m}:${s}`;
-}, 1000);
-
-/* ========== HP BAR ========== */
+/* =========================================
+   ИНТЕРАКТИВ
+   ========================================= */
+const cta = document.getElementById('cta');
+const toast = document.getElementById('toast');
 const hpFill = document.getElementById('hpFill');
+
+// Кнопка в лобби
+cta.addEventListener('click', () => {
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+  
+  // Имитация урона по HP
+  let currentHp = 100;
+  const interval = setInterval(() => {
+    currentHp -= 5;
+    if (currentHp < 20) currentHp = 100;
+    hpFill.style.width = currentHp + '%';
+  }, 100);
+  setTimeout(() => clearInterval(interval), 2000);
+});
+
+// Живой HP бар (пульсация)
 setInterval(() => {
-  hpFill.style.width = (85 + Math.random() * 15) + '%';
-}, 2500);
-
-/* ========== КАРТОЧКИ ========== */
-setTimeout(() => {
-  document.querySelectorAll('.card').forEach((c, i) => {
-    setTimeout(() => c.classList.add('shown'), i * 180);
-  });
-}, 300);
-
-/* ========== ЧАСТИЦЫ ПРИ КЛИКЕ ========== */
-document.addEventListener('click', (e) => {
-  const colors = ['#00eaff', '#ff2d95', '#a6ff00', '#ff9e00', '#7b2bff', '#fff'];
-  for (let i = 0; i < 20; i++) {
-    const b = document.createElement('div');
-    b.className = 'burst';
-    b.style.left = e.clientX + 'px';
-    b.style.top = e.clientY + 'px';
-    b.style.color = colors[Math.floor(Math.random() * colors.length)];
-    b.style.setProperty('--tx', (Math.random() - 0.5) * 500 + 'px');
-    b.style.setProperty('--ty', (Math.random() - 0.5) * 500 + 'px');
-    b.style.animation = `burstFly 0.9s ease-out forwards`;
-    document.body.appendChild(b);
-    setTimeout(() => b.remove(), 900);
+  if (!hpFill.style.width || hpFill.style.width === '100%') {
+    hpFill.style.width = (85 + Math.random() * 15) + '%';
   }
-});
+}, 3000);
 
-const burstStyle = document.createElement('style');
-burstStyle.textContent = `
-@keyframes burstFly {
-  0% { transform: translate(0,0) scale(1); opacity: 1; }
-  100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
-}`;
-document.head.appendChild(burstStyle);
-
-/* ========== ТРЕЙЛ МЫШИ ========== */
-let lastTrail = 0;
-document.addEventListener('mousemove', (e) => {
-  const now = Date.now();
-  if (now - lastTrail < 25) return;
-  lastTrail = now;
-  const t = document.createElement('div');
-  t.className = 'trail';
-  t.style.left = e.clientX + 'px';
-  t.style.top = e.clientY + 'px';
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 600);
-});
-
-/* ========== CTA ========== */
-document.getElementById('cta').addEventListener('click', () => {
-  const toast = document.createElement('div');
-  toast.className = 'toast';
-  toast.innerHTML = '<div class="big">🎮 ЛОББИ ОТКРЫТО!</div><div class="sub">ВСЕ В ДЕЛЕ · ЖДЁМ ТЕБЯ</div>';
-  document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 2800);
-});
-
-/* ========== КВАЗАРЫ И МАГНЕТАРЫ ========== */
-const quasarColors = ['#00eaff', '#ff2d95', '#a6ff00', '#ff9e00', '#7b2bff'];
-for (let i = 0; i < 14; i++) {
-  const q = document.createElement('div');
-  q.className = 'quasar';
-  q.style.left = Math.random() * 100 + 'vw';
-  q.style.top = Math.random() * 100 + 'vh';
-  q.style.setProperty('--qc', quasarColors[Math.floor(Math.random() * quasarColors.length)]);
-  q.style.setProperty('--d', (4 + Math.random() * 6) + 's');
-  q.style.setProperty('--dl', (Math.random() * 6) + 's');
-  document.body.appendChild(q);
-}
-for (let i = 0; i < 8; i++) {
-  const m = document.createElement('div');
-  m.className = 'magnetar';
-  m.style.left = Math.random() * 100 + 'vw';
-  m.style.top = Math.random() * 100 + 'vh';
-  m.style.setProperty('--d', (2 + Math.random() * 4) + 's');
-  m.style.setProperty('--dl', (Math.random() * 4) + 's');
-  document.body.appendChild(m);
-}
 </script>
 </body>
 </html>
